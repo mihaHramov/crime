@@ -46,6 +46,9 @@ public class CrimeLab {
             mCrimes = new ArrayList<Crime>();
             Log.e(TAG, "Error loading crimes: ", e);
         }
+        if(mCrimes.size()==0){
+            Log.d("mihaHramov","pizdec");
+        }
     }
 
     public static CrimeLab get(Context c) {

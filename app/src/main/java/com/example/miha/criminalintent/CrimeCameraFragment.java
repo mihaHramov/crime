@@ -1,6 +1,11 @@
 package com.example.miha.criminalintent;
 
+import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.graphics.Matrix;
 import android.hardware.Camera;
 import android.os.Build;
 import android.os.Bundle;
@@ -24,6 +29,7 @@ import java.util.UUID;
  */
 public class CrimeCameraFragment extends Fragment {
     private static final String TAG = "CrimeCameraFragment";
+    public static final String EXTRA_PHOTO_FILENAME = "CrimeCameraFragment";
     private View mProgressContainer;
     private Camera mCamera;
     private SurfaceView mSurfaceView;
@@ -43,6 +49,14 @@ public class CrimeCameraFragment extends Fragment {
             boolean success = true;
             try {
                 os = getActivity().openFileOutput(filename, Context.MODE_PRIVATE);
+/*
+                Bitmap p = BitmapFactory.decodeByteArray(data, 0, data.length);
+                Matrix matrix = new Matrix();
+                matrix.postRotate(90);
+                Bitmap.createBitmap(p, 0, 0, p.getWidth(), p.getHeight(), matrix, true);
+  */
+
+
                 os.write(data);
             } catch (Exception e) {
                 Log.e(TAG, "Error writing to file " + filename, e);
@@ -59,7 +73,13 @@ public class CrimeCameraFragment extends Fragment {
                 }
             }
             if (success) {
+
+                Intent i = new Intent();
+                i.putExtra(EXTRA_PHOTO_FILENAME, filename);
+                getActivity().setResult(Activity.RESULT_OK, i);
                 Log.i(TAG, "JPEG saved at " + filename);
+            }else{
+                getActivity().setResult(Activity.RESULT_CANCELED);
             }
             getActivity().finish();
         }

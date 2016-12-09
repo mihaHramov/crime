@@ -1,5 +1,8 @@
 package com.example.miha.criminalintent.model;
 
+import android.util.Log;
+import android.widget.Toast;
+
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -10,12 +13,14 @@ import java.util.UUID;
  * Created by miha on 24.07.2016.
  */
 public class Crime {
+    private static final String JSON_SUSPECT = "suspect";
     private static final String JSON_PHOTO = "photo";
     private static final String JSON_ID = "id";
     private static final String JSON_TITLE = "title";
     private static final String JSON_SOLVED = "solved";
     private static final String JSON_DATE = "date";
 
+    private String mSuspect;
     private Photo mPhoto;
     private UUID mId;
     private String mTitle;
@@ -33,8 +38,13 @@ public class Crime {
         mTitle = json.getString(JSON_TITLE);
         mSolved = json.getBoolean(JSON_SOLVED);
         mDate = new Date(json.getLong(JSON_DATE));
-        if (json.has(JSON_PHOTO))
+        if (json.has(JSON_PHOTO)){
             mPhoto = new Photo(json.getJSONObject(JSON_PHOTO));
+            Log.d("mihaHramov", mPhoto.getFilename());
+        }
+
+        if (json.has(JSON_SUSPECT))
+            mSuspect = json.getString(JSON_SUSPECT);
     }
 
 
@@ -46,6 +56,7 @@ public class Crime {
         json.put(JSON_DATE, mDate.getTime());
         if (mPhoto != null)
             json.put(JSON_PHOTO, mPhoto.toJSON());
+        json.put(JSON_SUSPECT, mSuspect);
         return json;
     }
     public UUID getId() {
@@ -67,6 +78,12 @@ public class Crime {
     }
     public void setDate(Date date) {
         mDate = date;
+    }
+    public String getSuspect() {
+        return mSuspect;
+    }
+    public void setSuspect(String suspect) {
+        mSuspect = suspect;
     }
     public boolean isSolved() {
         return mSolved;
