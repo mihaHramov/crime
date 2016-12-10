@@ -50,6 +50,26 @@ public class CrimeFragment extends Fragment {
     private ImageButton mPhotoButton;
     private ImageView mPhotoView;
     private static final String DIALOG_IMAGE = "image";
+    private Callbacks mCallbacks;
+    /**
+     * Обязательный интерфейс для активности-хоста
+     */
+    public interface Callbacks {
+        void onCrimeUpdated(Crime crime);
+    }
+
+    @Override
+    public void onAttach(Activity activity) {
+        super.onAttach(activity);
+        mCallbacks = (Callbacks)activity;
+    }
+
+
+    @Override
+    public void onDetach() {
+        super.onDetach();
+        mCallbacks = null;
+    }
 
     public static CrimeFragment newInstance(UUID crimeId) {
         Bundle args = new Bundle();
@@ -58,6 +78,8 @@ public class CrimeFragment extends Fragment {
         fragment.setArguments(args);
         return fragment;
     }
+
+
 
 
     @Override
@@ -104,6 +126,8 @@ public class CrimeFragment extends Fragment {
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
                 mCrime.setTitle(s.toString());
+                mCallbacks.onCrimeUpdated(mCrime);
+                getActivity().setTitle(mCrime.getTitle());
             }
 
             @Override
@@ -131,6 +155,7 @@ public class CrimeFragment extends Fragment {
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                 // Назначение флага раскрытия преступления
                 mCrime.setSolved(isChecked);
+                mCallbacks.onCrimeUpdated(mCrime);
             }
         });
 
@@ -242,6 +267,7 @@ public class CrimeFragment extends Fragment {
                     .getSerializableExtra(DatePickerFragment.EXTRA_DATE);
             mCrime.setDate(date);
             //  mDateButton.setText(mCrime.getDate().toString());
+            mCallbacks.onCrimeUpdated(mCrime);
             updateDate();
         } else if (requestCode == REQUEST_PHOTO) {
             String filename = data.getStringExtra(CrimeCameraFragment.EXTRA_PHOTO_FILENAME);
@@ -250,6 +276,7 @@ public class CrimeFragment extends Fragment {
                 Photo p = new Photo(filename);
                 mCrime.setPhoto(p);
                 showPhoto();
+                mCallbacks.onCrimeUpdated(mCrime);
                 Log.i(TAG, "Crime: " + mCrime.getTitle() + " has a photo");
             }
         } else if (requestCode == REQUEST_CONTACT) {
@@ -273,6 +300,7 @@ public class CrimeFragment extends Fragment {
             String suspect = c.getString(0);
             mCrime.setSuspect(suspect);
             mSuspectButton.setText(suspect);
+            mCallbacks.onCrimeUpdated(mCrime);
             c.close();
         }
     }
