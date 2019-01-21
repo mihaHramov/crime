@@ -1,0 +1,55 @@
+{
+  "project_info": {
+    "project_number": "37790681265",
+    "firebase_url": "https://crime-1a4ce.firebaseio.com",
+    "project_id": "crime-1a4ce",
+    "storage_bucket": "crime-1a4ce.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:37790681265:android:a35c04f07106d58e",
+        "android_client_info": {
+          "package_name": "com.example.miha.criminalintent"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "37790681265-kmk5hvhe8o6m508bmaeqen3kq0rfih7e.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.miha.criminalintent",
+            "certificate_hash": "1b876e20eb2e32df24df122baaa2361cdbbb763b"
+          }
+        },
+        {
+          "client_id": "37790681265-4q6dh3mi3k23sphrks7lfsld1nt4brpd.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyA_JpceSa033I5baShaCFP4aTl_mRy537I"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 2,
+          "other_platform_oauth_client": [
+            {
+              "client_id": "37790681265-4q6dh3mi3k23sphrks7lfsld1nt4brpd.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

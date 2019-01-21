@@ -1,4 +1,5 @@
 apply plugin: 'com.android.application'
+apply plugin: 'com.google.gms.google-services'
 
 android {
     compileSdkVersion 28
@@ -33,6 +34,8 @@ def moxy = "1.5.5"
 dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
     implementation "com.android.support:appcompat-v7:$versionSupport"
+    implementation "com.android.support:support-v4:$versionSupport"
+    implementation "com.android.support:support-media-compat:$versionSupport"
     implementation "com.android.support:exifinterface:$versionSupport"
     implementation "com.android.support:design:$versionSupport"
     implementation "com.android.support:cardview-v7:$versionSupport"
@@ -66,4 +69,7 @@ dependencies {
     testImplementation 'junit:junit:4.12'
     androidTestImplementation 'com.android.support.test:runner:1.0.2'
     androidTestImplementation 'com.android.support.test.espresso:espresso-core:3.0.2'
+
+    implementation 'com.google.firebase:firebase-auth:16.1.0'
+    implementation 'com.google.firebase:firebase-core:16.0.6'
 }
