@@ -1,15 +1,10 @@
 package com.example.miha.criminalintent.presentation.ui.fragment;
 
-import android.app.Activity;
 import android.content.Intent;
 import android.content.pm.PackageManager;
-import android.database.Cursor;
-import android.graphics.drawable.BitmapDrawable;
-import android.net.Uri;
 import android.os.Bundle;
 import android.provider.ContactsContract;
 import android.support.annotation.NonNull;
-import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -22,70 +17,142 @@ import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 
-import com.example.miha.criminalintent.PictureUtils;
+import com.arellomobile.mvp.MvpAppCompatFragment;
+import com.arellomobile.mvp.presenter.InjectPresenter;
+import com.arellomobile.mvp.presenter.ProvidePresenter;
 import com.example.miha.criminalintent.R;
 import com.example.miha.criminalintent.domain.model.Crime;
-import com.example.miha.criminalintent.presentation.ui.activity.CrimeCameraActivity;
-import com.example.miha.criminalintent.presentation.ui.dialog.DatePickerFragment;
-import com.example.miha.criminalintent.presentation.ui.dialog.ImageFragment;
+import com.example.miha.criminalintent.presentation.mvp.crimeFragment.CrimeFragmentPresenter;
+import com.example.miha.criminalintent.presentation.mvp.crimeFragment.CrimeFragmentView;
+import com.example.miha.criminalintent.presentation.ui.ApplicationCrime;
 
-import java.util.Date;
-import java.util.UUID;
+import butterknife.BindView;
+import butterknife.ButterKnife;
 
 
-public class CrimeFragment extends Fragment {
-//    public static final String EXTRA_CRIME_ID = "com.bignerdranch.android.criminalintent.crime_id";
-//    public static final String DIALOG_DATE = "date";
-//    private static final int REQUEST_DATE = 0;
-//    private static final int REQUEST_PHOTO = 1;
-//    private static final int REQUEST_CONTACT = 2;
-//
-//    private Crime mCrime;
-//    private EditText mTitleField;
-//    private Button mDateButton;
-//    private CheckBox mSolvedCheckBox;
-//    private Button mSuspectButton;
-//    private ImageButton mPhotoButton;
-//    private ImageView mPhotoView;
-//    private static final String DIALOG_IMAGE = "image";
-//    private Callbacks mCallbacks;
-//
-//    public interface Callbacks {
-//        void onCrimeUpdated(Crime crime);
-//    }
-//
-//    @Override
-//    public void onAttach(Activity activity) {
-//        super.onAttach(activity);
-//        mCallbacks = (Callbacks) activity;
-//    }
-//
-//
-//    @Override
-//    public void onDetach() {
-//        super.onDetach();
-//        mCallbacks = null;
-//    }
-//
-//    public static CrimeFragment newInstance(UUID crimeId) {
-//        Bundle args = new Bundle();
-//        args.putSerializable(EXTRA_CRIME_ID, crimeId);
-//        CrimeFragment fragment = new CrimeFragment();
-//        fragment.setArguments(args);
-//        return fragment;
-//    }
-//
-//
-//    @Override
-//    public void onCreate(Bundle savedInstanceState) {
-//        super.onCreate(savedInstanceState);
-//
-//
-//        UUID crimeId = (UUID) getArguments().getSerializable(EXTRA_CRIME_ID);//забрал из аргументов id
-//       // mCrime = CrimeLab.get(getActivity()).getCrime(crimeId);
-//
-//    }
-//
+public class CrimeFragment extends MvpAppCompatFragment implements CrimeFragmentView {
+    private static final String EXTRA_CRIME = CrimeFragment.class.getCanonicalName();
+
+    public static final String DIALOG_DATE = "date";
+    private static final int REQUEST_DATE = 0;
+    private static final int REQUEST_PHOTO = 1;
+    private static final int REQUEST_CONTACT = 2;
+    private static final String DIALOG_IMAGE = "image";
+
+    @BindView(R.id.crime_title)
+    EditText mTitleField;
+    @BindView(R.id.crime_date)
+    Button mDateButton;
+
+    @BindView(R.id.crime_solved)
+    CheckBox mSolvedCheckBox;
+
+    @BindView(R.id.crime_suspectButton)
+    Button mSuspectButton;
+
+    @BindView(R.id.crime_imageButton)
+    ImageButton mPhotoButton;
+
+    @BindView(R.id.crime_imageView)
+    ImageView mPhotoView;
+
+
+    @BindView(R.id.crime_reportButton)
+    Button reportButton;
+
+    @InjectPresenter
+    CrimeFragmentPresenter presenter;
+
+    @ProvidePresenter
+    CrimeFragmentPresenter providePresenter() {
+        Crime crime = (Crime) getArguments().getSerializable(EXTRA_CRIME);
+        presenter = ApplicationCrime.getCrimeFragmentComponent(crime).getPresenter();
+        presenter.init();
+        return presenter;
+    }
+
+    public static CrimeFragment newInstance(Crime crime) {
+        Bundle args = new Bundle();
+        args.putSerializable(EXTRA_CRIME, crime);
+        CrimeFragment fragment = new CrimeFragment();
+        fragment.setArguments(args);
+        return fragment;
+    }
+
+
+    @Override
+    public void showCrime(Crime crime) {
+        mTitleField.setText(crime.getTitle());
+        mSolvedCheckBox.setChecked(crime.getSolved());
+        mDateButton.setText(crime.getDate());
+        mTitleField.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+
+            }
+        });
+        mSolvedCheckBox.setOnCheckedChangeListener((buttonView, isChecked) -> {
+        });
+
+        mPhotoButton.setOnClickListener(v1 -> {
+            //   Intent i = new Intent(getActivity(), CrimeCameraActivity.class);
+            // startActivityForResult(i, REQUEST_PHOTO);
+        });
+        mDateButton.setOnClickListener(v15 -> {
+//            FragmentManager fm = getActivity().getSupportFragmentManager();
+//            DatePickerFragment dialog = DatePickerFragment.newInstance(mCrime.getDate());
+//            dialog.setTargetFragment(CrimeFragment.this, REQUEST_DATE);
+//            dialog.show(fm, DIALOG_DATE);
+        });
+
+
+        mPhotoView.setOnClickListener(v12 -> {
+            String p = crime.getPhoto();
+            if (!p.isEmpty()) {
+                FragmentManager fm = getActivity().getSupportFragmentManager();
+                String path = getActivity().getFileStreamPath(p).getAbsolutePath();
+//              ImageFragment.newInstance(path)
+//                      .show(fm, DIALOG_IMAGE);
+            }
+        });
+        PackageManager pm = getActivity().getPackageManager();
+        if (!pm.hasSystemFeature(PackageManager.FEATURE_CAMERA) && !pm.hasSystemFeature(PackageManager.FEATURE_CAMERA_FRONT)) {
+            mPhotoButton.setEnabled(false);
+        }
+
+
+        reportButton.setOnClickListener(v13 -> {
+            Intent i = new Intent(Intent.ACTION_SEND);
+            i.setType("text/plain");
+            //  i.putExtra(Intent.EXTRA_TEXT, getCrimeReport());
+            i.putExtra(Intent.EXTRA_SUBJECT,
+                    getString(R.string.crime_report_subject));
+            i = Intent.createChooser(i, getString(R.string.send_report));
+            startActivity(i);
+        });
+
+
+        mSuspectButton.setOnClickListener(v14 -> {
+            Intent i = new Intent(Intent.ACTION_PICK,
+                    ContactsContract.Contacts.CONTENT_URI);
+            startActivityForResult(i, REQUEST_CONTACT);
+        });
+        if (crime.getSuspect() != null) {
+            mSuspectButton.setText(crime.getSuspect().getName());
+        }
+    }
+
+    //
 //    @Override
 //    public void onPause() {
 //        super.onPause();
@@ -99,95 +166,13 @@ public class CrimeFragment extends Fragment {
 //    }
 //
 //
-//    @Override
-//    public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup parent,
-//                             Bundle savedInstanceState) {
-//        View v = inflater.inflate(R.layout.fragment_crime, parent, false);
-//        mTitleField = v.findViewById(R.id.crime_title);
-//        mTitleField.setText(mCrime.getTitle());
-//
-//
-//        mTitleField.addTextChangedListener(new TextWatcher() {
-//            @Override
-//            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-//
-//            }
-//
-//            @Override
-//            public void onTextChanged(CharSequence s, int start, int before, int count) {
-//                mCrime.setTitle(s.toString());
-//                mCallbacks.onCrimeUpdated(mCrime);
-//                getActivity().setTitle(mCrime.getTitle());
-//            }
-//
-//            @Override
-//            public void afterTextChanged(Editable s) {
-//
-//            }
-//        });
-//
-//        mDateButton = v.findViewById(R.id.crime_date);
-//        updateDate();
-//        mDateButton.setOnClickListener(v15 -> {
-//            FragmentManager fm = getActivity().getSupportFragmentManager();
-//            DatePickerFragment dialog = DatePickerFragment.newInstance(mCrime.getDate());
-//            dialog.setTargetFragment(CrimeFragment.this, REQUEST_DATE);
-//            dialog.show(fm, DIALOG_DATE);
-//
-//        });
-//
-//        mSolvedCheckBox = v.findViewById(R.id.crime_solved);
-//        mSolvedCheckBox.setChecked(mCrime.getSolved());
-//        mSolvedCheckBox.setOnCheckedChangeListener((buttonView, isChecked) -> {
-//            mCrime.setSolved(isChecked);
-//            mCallbacks.onCrimeUpdated(mCrime);
-//        });
-//
-//        mPhotoButton = v.findViewById(R.id.crime_imageButton);
-//        mPhotoButton.setOnClickListener(v1 -> {
-//            Intent i = new Intent(getActivity(), CrimeCameraActivity.class);
-//            startActivityForResult(i, REQUEST_PHOTO);
-//        });
-//        mPhotoView = v.findViewById(R.id.crime_imageView);
-//        mPhotoView.setOnClickListener(v12 -> {
-//            String p = mCrime.getPhoto();
-//            if (p == null)
-//                return;
-//            FragmentManager fm = getActivity().getSupportFragmentManager();
-//            String path = getActivity().getFileStreamPath(p).getAbsolutePath();
-//            ImageFragment.newInstance(path)
-//                    .show(fm, DIALOG_IMAGE);
-//
-//        });
-//        PackageManager pm = getActivity().getPackageManager();
-//        if (!pm.hasSystemFeature(PackageManager.FEATURE_CAMERA) && !pm.hasSystemFeature(PackageManager.FEATURE_CAMERA_FRONT)) {
-//            mPhotoButton.setEnabled(false);
-//        }
-//
-//        Button reportButton = v.findViewById(R.id.crime_reportButton);
-//        reportButton.setOnClickListener(v13 -> {
-//            Intent i = new Intent(Intent.ACTION_SEND);
-//            i.setType("text/plain");
-//            i.putExtra(Intent.EXTRA_TEXT, getCrimeReport());
-//            i.putExtra(Intent.EXTRA_SUBJECT,
-//                    getString(R.string.crime_report_subject));
-//            i = Intent.createChooser(i, getString(R.string.send_report));
-//            startActivity(i);
-//        });
-//
-//        mSuspectButton = v.findViewById(R.id.crime_suspectButton);
-//        mSuspectButton.setOnClickListener(v14 -> {
-//            Intent i = new Intent(Intent.ACTION_PICK,
-//                    ContactsContract.Contacts.CONTENT_URI);
-//            startActivityForResult(i, REQUEST_CONTACT);
-//        });
-//        if (mCrime.getSuspect() != null) {
-//            mSuspectButton.setText(mCrime.getSuspect().getName());
-//        }
-//
-//
-//        return v;
-//    }
+    @Override
+    public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup parent,
+                             Bundle savedInstanceState) {
+        View v = inflater.inflate(R.layout.fragment_crime, parent, false);
+        ButterKnife.bind(this, v);
+        return v;
+    }
 //
 //    private void showPhoto() {
 //        // Назначение изображения, полученного на основе фотографии
@@ -210,9 +195,6 @@ public class CrimeFragment extends Fragment {
 //        return getString(R.string.crime_report, mCrime.getTitle(), mCrime.getDate(), solvedString, suspect);
 //    }
 //
-//    public void updateDate() {
-//        mDateButton.setText(mCrime.getDate().toString());
-//    }
 //
 //    @Override
 //    public void onStop() {
