@@ -15,10 +15,7 @@ import com.example.miha.criminalintent.presentation.ui.dialog.AuthFragmentDialog
 import com.example.miha.criminalintent.presentation.ui.fragment.CrimeListFragment;
 
 public class CrimeListActivity extends SingleFragmentActivity
-        implements
-//        CrimeListFragment.Callbacks,
-////        CrimeFragment.Callbacks,
-        CrimeListActivityView { // активити списка
+        implements CrimeListFragment.Callbacks, CrimeListActivityView { // активити списка
 
     @InjectPresenter
     CrimeListActivityPresenter presenter;
@@ -61,20 +58,14 @@ public class CrimeListActivity extends SingleFragmentActivity
         return R.layout.activity_masterdetail;
     }
 
-//    @Override
-//    public void onCrimeSelected(Crime crime) {
-//        if (findViewById(R.id.detailFragmentContainer) == null) {
-//            showCrimeInNewActivity(crime.getId());
-//        } else {
-//            showCrimeInFragment(crime.getId());
-//        }
-//    }
+    @Override
+    public void onCrimeSelected(Crime crime) {
+        presenter.choiceItemCrime(crime);
+    }
 
     @Override
-    public void showCrimeInNewActivity(Crime uuid) {
-//        Intent i = new Intent(this, CrimePagerActivity.class);
-//        i.putExtra(CrimeFragment.EXTRA_CRIME_ID, uuid);
-//        startActivity(i);
+    public void showCrimeInNewActivity(Crime crime) {
+        CrimePagerActivity.startActivity(this,crime);
     }
 
     @Override
@@ -94,6 +85,6 @@ public class CrimeListActivity extends SingleFragmentActivity
 
     @Override
     public void showAuth() {
-        new AuthFragmentDialog().show(getSupportFragmentManager(),"");
+        new AuthFragmentDialog().show(getSupportFragmentManager(), "");
     }
 }

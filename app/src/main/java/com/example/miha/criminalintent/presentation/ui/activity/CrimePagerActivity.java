@@ -1,80 +1,63 @@
 package com.example.miha.criminalintent.presentation.ui.activity;
 
+import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentActivity;
-import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentStatePagerAdapter;
 import android.support.v4.view.ViewPager;
 
+import com.arellomobile.mvp.MvpAppCompatActivity;
+import com.arellomobile.mvp.presenter.InjectPresenter;
+import com.arellomobile.mvp.presenter.ProvidePresenter;
 import com.example.miha.criminalintent.R;
 import com.example.miha.criminalintent.domain.model.Crime;
-import com.example.miha.criminalintent.presentation.ui.fragment.CrimeFragment;
+import com.example.miha.criminalintent.presentation.mvp.crimePagerActivity.CrimePagerActivityPresenter;
+import com.example.miha.criminalintent.presentation.mvp.crimePagerActivity.CrimePagerActivityView;
+import com.example.miha.criminalintent.presentation.ui.ApplicationCrime;
+import com.example.miha.criminalintent.presentation.ui.adapter.CrimeFragmentPagerAdapter;
 
-import java.util.ArrayList;
-import java.util.UUID;
+import java.util.List;
 
-/**
- * Created by miha on 14.08.2016.
- */
-public class CrimePagerActivity extends FragmentActivity{
-    //implements CrimeFragment.Callbacks {
+public class CrimePagerActivity extends MvpAppCompatActivity implements CrimePagerActivityView {
     private ViewPager mViewPager;
-    private ArrayList<Crime> mCrime;
+    private static String EXTRA_CRIME = CrimePagerActivity.class.getCanonicalName();
+    private CrimeFragmentPagerAdapter adapter;
 
-//    @Override
-//    public void onCreate(Bundle savedInstanceState) {
-//        super.onCreate(savedInstanceState);
-//        mViewPager = new ViewPager(this);
-//        mViewPager.setId(R.id.viewPager);
-//        setContentView(mViewPager);
-//        //mCrime = CrimeLab.get(this).getCrimes();
-//        FragmentManager fm = getSupportFragmentManager();
-//        mViewPager.setAdapter(new FragmentStatePagerAdapter(fm) {
-//            @Override
-//            public Fragment getItem(int position) {
-//                Crime crime =  mCrime.get(position);
-//                return CrimeFragment.newInstance(crime.getId());
-//            }
-//
-//            @Override
-//            public int getCount() {
-//                return mCrime.size();
-//            }
-//        });
-//        /*
-//        * поиск нужного преступления по id*/
-//        UUID crimeId = (UUID)getIntent().getSerializableExtra(CrimeFragment.EXTRA_CRIME_ID);
-//        for(int i=0;i<mCrime.size();i++){
-//            if(mCrime.get(i).getId().equals(crimeId)){
-//                mViewPager.setCurrentItem(i);
-//                break;
-//            }
-//        }
-//        mViewPager.setOnPageChangeListener(new ViewPager.OnPageChangeListener() {
-//            @Override
-//            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
-//
-//            }
-//
-//            @Override
-//            public void onPageSelected(int position) {
-//                Crime crime = mCrime.get(position);
-//                if(crime.getTitle()!= null){
-//                    setTitle(crime.getTitle());
-//                }
-//            }
-//
-//            @Override
-//            public void onPageScrollStateChanged(int state) {
-//
-//            }
-//        });
-//
-//    }
-//
-//    @Override
-//    public void onCrimeUpdated(Crime crime) {
-//
-//    }
+
+    public static void startActivity(Context context, Crime crime) {
+        Intent i = new Intent(context, CrimePagerActivity.class);
+        i.putExtra(EXTRA_CRIME, crime);
+        context.startActivity(i);
+    }
+
+
+    @InjectPresenter
+    CrimePagerActivityPresenter presenter;
+
+    @ProvidePresenter
+    CrimePagerActivityPresenter providePresenter() {
+        Crime crime = (Crime) getIntent().getSerializableExtra(EXTRA_CRIME);
+        presenter = ApplicationCrime.getCrimePagerActivityComponent(crime).getPresenter();
+        presenter.init();
+        return presenter;
+    }
+
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        mViewPager = new ViewPager(this);
+        mViewPager.setId(R.id.viewPager);
+        setContentView(mViewPager);
+        adapter = new CrimeFragmentPagerAdapter(getSupportFragmentManager());
+        mViewPager.setAdapter(adapter);
+    }
+
+    @Override
+    public void showCurrentPosition(Integer integer) {
+        mViewPager.setCurrentItem(integer);
+    }
+
+    @Override
+    public void showCrimes(List<Crime> crimes) {
+        adapter.setCrimeList(crimes);
+    }
 }
