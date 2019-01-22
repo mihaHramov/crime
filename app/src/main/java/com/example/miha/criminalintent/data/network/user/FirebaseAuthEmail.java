@@ -38,16 +38,5 @@ public class FirebaseAuthEmail implements UserApi {
     @Override
     public Observable<User> registration(String login, String password) {
             return getListener(mAuth.createUserWithEmailAndPassword(login,password));
-        //        return Single.create((Single.OnSubscribe<FirebaseUser>) singleSubscriber ->
-//                mAuth.createUserWithEmailAndPassword(login, password)
-//                        .addOnCompleteListener(task -> {
-//                            if (task.isSuccessful()) {
-//                                singleSubscriber.onSuccess(mAuth.getCurrentUser());
-//                            } else {
-//                                singleSubscriber.onError(new Throwable(task.getException().getMessage()));
-//                            }
-//                        }))
-//                .map(new FirebaseUserMaper())
-//                .toObservable();
     }
 }
