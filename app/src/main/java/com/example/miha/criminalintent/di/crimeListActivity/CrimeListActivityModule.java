@@ -1,6 +1,7 @@
 package com.example.miha.criminalintent.di.crimeListActivity;
 
 import com.example.miha.criminalintent.data.repositories.repositoryOfCrime.IRepositoryOfCrime;
+import com.example.miha.criminalintent.data.repositories.repositoryOfUser.IRepositoryOfUser;
 import com.example.miha.criminalintent.domain.crimeListActivity.CrimeListActivityInteractor;
 import com.example.miha.criminalintent.domain.crimeListActivity.ICrimeListActivityInteractor;
 import com.example.miha.criminalintent.presentation.mvp.crimeListActivity.CrimeListActivityPresenter;
@@ -12,8 +13,8 @@ import dagger.Provides;
 @Module
 public class CrimeListActivityModule {
     @Provides
-    public ICrimeListActivityInteractor provideInteractor(IRepositoryOfCrime repositoryOfCrime, ISchedulersProvider provider) {
-        return new CrimeListActivityInteractor(repositoryOfCrime,provider);
+    public ICrimeListActivityInteractor provideInteractor(IRepositoryOfCrime repositoryOfCrime, ISchedulersProvider provider,IRepositoryOfUser userRepository) {
+        return new CrimeListActivityInteractor(repositoryOfCrime,provider,userRepository);
     }
 
     @Provides
