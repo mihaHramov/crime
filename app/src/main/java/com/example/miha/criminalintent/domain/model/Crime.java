@@ -1,38 +1,19 @@
 package com.example.miha.criminalintent.domain.model;
 
-import com.google.gson.annotations.Expose;
-import com.google.gson.annotations.SerializedName;
-
 import java.io.Serializable;
 import java.util.List;
 
 public class Crime implements Serializable {
-    @SerializedName("id")
-    @Expose
     private Integer id;
 
-    @SerializedName("date")
-    @Expose
     private List<Comment> comments;
-    @SerializedName("suspect")
-    @Expose
     private User suspect;
-    @SerializedName("photo")
-    @Expose
     private String photo;
-    @SerializedName("title")
-    @Expose
     private String title;
-    @SerializedName("date")
-    @Expose
     private String date;
 
-    @SerializedName("solved")
-    @Expose
     private Boolean solved;
 
-    @SerializedName("author")
-    @Expose
     private User author;
 
     public Integer getId() {

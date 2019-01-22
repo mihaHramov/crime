@@ -1,19 +1,10 @@
 package com.example.miha.criminalintent.domain.model;
 
-import com.google.gson.annotations.Expose;
-import com.google.gson.annotations.SerializedName;
+import java.io.Serializable;
 
-public class Comment {
-    @SerializedName("date")
-    @Expose
+public class Comment implements Serializable {
     private String mDate;
-
-    @SerializedName("message")
-    @Expose
     private String mMessage;
-
-    @SerializedName("author")
-    @Expose
     private User mAuthor;
 
     public String getDate() {
