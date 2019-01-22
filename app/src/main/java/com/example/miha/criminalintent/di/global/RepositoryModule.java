@@ -21,11 +21,14 @@ public class RepositoryModule {
         return new IRepositoryOfCrime() {
             @Override
             public Observable<List<Crime>> getCrimes() {
-                List<Crime> crimeList =  new ArrayList<>();
-                for (int i = 0;i<30;i++) {
-
+                List<Crime> crimeList = new ArrayList<>();
+                for (int i = 0; i < 30; i++) {
                     Crime crime = new Crime();
-                    crime.setTitle("temp"+i);
+                    crime.setTitle("temp" + i);
+                    crime.setId(i);
+                    crime.setSolved(false);
+                    crime.setPhoto("photo");
+                    crimeList.add(crime);
                 }
                 return Observable.just(crimeList);
             }
@@ -50,7 +53,7 @@ public class RepositoryModule {
     }
 
     @Provides
-    IRepositoryOfUser provideRepositoryOfUser(Context context){
+    IRepositoryOfUser provideRepositoryOfUser(Context context) {
         return new RepositoryOfUser(context);
     }
 
