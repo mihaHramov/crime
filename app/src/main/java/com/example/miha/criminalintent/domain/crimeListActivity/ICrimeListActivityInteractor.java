@@ -6,7 +6,6 @@ public interface ICrimeListActivityInteractor {
     void createNewCrime(Callback callback);
     interface Callback{
         void onSuccess(Crime crime);
-        void onError(String ex);
     }
 
 }

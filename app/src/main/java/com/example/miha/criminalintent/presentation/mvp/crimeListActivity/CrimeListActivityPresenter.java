@@ -18,17 +18,7 @@ public class CrimeListActivityPresenter extends MvpPresenter<CrimeListActivityVi
         this.isViewHasTwoPanelInterface = isTwoPanelInterface;
     }
     public void createNewCrime(){
-        interactor.createNewCrime(new ICrimeListActivityInteractor.Callback() {
-            @Override
-            public void onSuccess(Crime crime) {
-                CrimeListActivityPresenter.this.choiceItemCrime(crime);
-            }
-
-            @Override
-            public void onError(String ex) {
-
-            }
-        });
+        interactor.createNewCrime(this::choiceItemCrime);
     }
 
     public void choiceItemCrime(Crime crime){
