@@ -91,7 +91,7 @@ public class BdRepositoryOfCrime extends SQLiteOpenHelper {
                 crimeAs + "." + CRIME_ID + " AS " + crimeId;
 
         String from = " FROM " + CRIME_TABLE + " AS " + crimeAs +
-                " INNER JOIN " + USER_TABLE + " AS " + authorAs + " ON " + crimeAs + "." + CRIME_AUTHOR + "=" + authorAs + "." + USER_ID +
+                " LEFT JOIN " + USER_TABLE + " AS " + authorAs + " ON " + crimeAs + "." + CRIME_AUTHOR + "=" + authorAs + "." + USER_ID +
                 " LEFT JOIN " + USER_TABLE + " AS " + userSuspect + " ON " + crimeAs + "." + CRIME_SUSPECT + "=" + userSuspect + "." + USER_ID;
 
 
@@ -120,6 +120,7 @@ public class BdRepositoryOfCrime extends SQLiteOpenHelper {
                 User suspect = getUserFromCrime(cursor, suspectNameidCol, suspectIdCol, suspectPhotoCol, suspectServerIdCol);
                 Crime crime = getCrime(cursor, titleIdCol, crimeDateCol, crimePhotoColl, crimeisSolvedColl, crimeIdColl);
                 crime.setAuthor(author);
+               // crime.setId();
                 crime.setSuspect(suspect);
                 crime.setComments(new ArrayList<>());
                 crimeList.add(crime);
@@ -233,6 +234,7 @@ public class BdRepositoryOfCrime extends SQLiteOpenHelper {
         crime.setPhoto("");
         crime.setDate("");
         crime.setSolved(false);
+        crime.setComments(new ArrayList<>());
         ContentValues cv = new ContentValues();
 
         cv.put(CRIME_TITLE, crime.getTitle());
