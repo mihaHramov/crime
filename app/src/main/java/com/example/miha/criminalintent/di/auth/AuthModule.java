@@ -6,7 +6,6 @@ import com.example.miha.criminalintent.domain.authUserFragment.AuthUserInteracto
 import com.example.miha.criminalintent.domain.authUserFragment.IAuthUserInteractor;
 import com.example.miha.criminalintent.presentation.mvp.authUserFragment.AuthUserFragmentPresenter;
 import com.example.miha.criminalintent.presentation.ui.utils.ISchedulersProvider;
-import com.google.firebase.auth.FirebaseAuth;
 
 import dagger.Module;
 import dagger.Provides;
@@ -18,14 +17,8 @@ public class AuthModule {
     public IAuthUserInteractor getInteractor(IRepositoryOfUser repositoryOfUser,
                                              UserApi auth,
                                              ISchedulersProvider provider) {
-        return new AuthUserInteractor(repositoryOfUser, auth,provider);
+        return new AuthUserInteractor(repositoryOfUser, auth, provider);
     }
-
-//    @Provides
-//    public FirebaseAuth provideAuth()
-//    {
-//        return FirebaseAuth.getInstance();
-//    }
 
     @Provides
     public AuthUserFragmentPresenter providePresenter(IAuthUserInteractor interactor) {
