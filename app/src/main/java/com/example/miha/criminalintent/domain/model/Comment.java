@@ -6,6 +6,15 @@ public class Comment implements Serializable {
     private String mDate;
     private String mMessage;
     private User mAuthor;
+    private Integer mId;
+
+    public Integer getId() {
+        return mId;
+    }
+
+    public void setId(Integer mId) {
+        this.mId = mId;
+    }
 
     public String getDate() {
         return mDate;
