@@ -235,6 +235,7 @@ public class BdRepositoryOfCrime extends SQLiteOpenHelper {
         }
         int updCount = db.update(CRIME_TABLE, cv, CRIME_ID + " = ?",
                 new String[]{crime.getId().toString()});
+        db.close();
         return updCount > 0;
     }
 
