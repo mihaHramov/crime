@@ -1,5 +1,7 @@
 package com.example.miha.criminalintent.presentation.ui.dialog;
 
+import android.app.Activity;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -13,7 +15,6 @@ import com.arellomobile.mvp.presenter.InjectPresenter;
 import com.arellomobile.mvp.presenter.ProvidePresenter;
 import com.example.miha.criminalintent.R;
 import com.example.miha.criminalintent.domain.events.BusProvider;
-import com.example.miha.criminalintent.domain.events.OnChangeDateCrime;
 import com.example.miha.criminalintent.presentation.mvp.datePicketFragment.DatePickerFragmentPresenter;
 import com.example.miha.criminalintent.presentation.mvp.datePicketFragment.DatePickerView;
 import com.example.miha.criminalintent.presentation.ui.ApplicationCrime;
@@ -27,7 +28,7 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 
 public class DatePickerFragment extends MvpAppCompatDialogFragment implements DatePickerView {
-    private static final String EXTRA_DATE = "com.bignerdranch.android.criminalintent.date";
+    public static final String EXTRA_DATE = "com.bignerdranch.android.criminalintent.date";
     @BindView(R.id.dialog_date_datePicker)
     DatePicker datePicker;
 
@@ -66,12 +67,6 @@ public class DatePickerFragment extends MvpAppCompatDialogFragment implements Da
     }
 
     @Override
-    public void onDestroy() {
-        super.onDestroy();
-        BusProvider.getInstance().unregister(this);
-    }
-
-    @Override
     public void close() {
         dismiss();
     }
@@ -101,9 +96,17 @@ public class DatePickerFragment extends MvpAppCompatDialogFragment implements Da
         });
     }
 
+    public interface OnChangeDate {
+        void changeDate(String date);
+    }
+
     @Override
     public void changeDateCrime(String datetime) {
-        BusProvider.getInstance().post(new OnChangeDateCrime(datetime));
+        if (getTargetFragment() == null)
+            return;
+        Intent i = new Intent();
+        i.putExtra(EXTRA_DATE, datetime);
+        getTargetFragment().onActivityResult(getTargetRequestCode(), Activity.RESULT_OK, i);
         dismiss();
     }
 }

@@ -22,26 +22,28 @@ import com.arellomobile.mvp.presenter.InjectPresenter;
 import com.arellomobile.mvp.presenter.ProvidePresenter;
 import com.example.miha.criminalintent.R;
 import com.example.miha.criminalintent.domain.events.BusProvider;
-import com.example.miha.criminalintent.domain.events.OnChangeDateCrime;
 import com.example.miha.criminalintent.domain.model.Crime;
 import com.example.miha.criminalintent.domain.model.User;
 import com.example.miha.criminalintent.presentation.mvp.crimeFragment.CrimeFragmentPresenter;
 import com.example.miha.criminalintent.presentation.mvp.crimeFragment.CrimeFragmentView;
 import com.example.miha.criminalintent.presentation.ui.ApplicationCrime;
+import com.example.miha.criminalintent.presentation.ui.activity.CrimeCameraActivity;
 import com.example.miha.criminalintent.presentation.ui.dialog.DatePickerFragment;
 import com.example.miha.criminalintent.presentation.ui.dialog.ImageFragment;
-import com.squareup.otto.Subscribe;
 import com.squareup.picasso.Picasso;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
 
-public class CrimeFragment extends MvpAppCompatFragment implements CrimeFragmentView {
+public class CrimeFragment extends MvpAppCompatFragment implements CrimeFragmentView,
+        DatePickerFragment.OnChangeDate {
     private static final String EXTRA_CRIME = CrimeFragment.class.getCanonicalName();
     private FragmentManager fm;
     private static final int REQUEST_PHOTO = 1;
+    private static final int REQUEST_DATE = 2;
     private static final String DIALOG_IMAGE = "image";
+
 
     @BindView(R.id.crime_title)
     EditText mTitleField;
@@ -123,9 +125,15 @@ public class CrimeFragment extends MvpAppCompatFragment implements CrimeFragment
         BusProvider.getInstance().unregister(this);
     }
 
-    @Subscribe
-    public void changeDateCrime(OnChangeDateCrime onChangeDateCrime) {
-        presenter.changeData(onChangeDateCrime.getDate());
+//    @Subscribe
+//    public void changeDateCrime(OnChangeDateCrime onChangeDateCrime) {
+//        presenter.changeData(onChangeDateCrime.getDate());
+//    }
+
+
+    @Override
+    public void changeDate(String date) {
+        presenter.changeData(date);
     }
 
     @Override
@@ -153,7 +161,9 @@ public class CrimeFragment extends MvpAppCompatFragment implements CrimeFragment
 
     @Override
     public void showChangeDateCrime(String date) {
-        DatePickerFragment.newInstance(date).show(fm, "");
+        DatePickerFragment dialog = DatePickerFragment.newInstance(date);
+        dialog.setTargetFragment(this, REQUEST_DATE);
+        dialog.show(fm, "");
     }
 
 
@@ -176,8 +186,8 @@ public class CrimeFragment extends MvpAppCompatFragment implements CrimeFragment
         ButterKnife.bind(this, v);
         mDateButton.setOnClickListener(v15 -> presenter.clickChangeDate());
         mPhotoButton.setOnClickListener(v1 -> {
-            //   Intent i = new Intent(getActivity(), CrimeCameraActivity.class);
-            // startActivityForResult(i, REQUEST_PHOTO);
+            Intent i = new Intent(getActivity(), CrimeCameraActivity.class);
+            startActivityForResult(i, REQUEST_PHOTO);
         });
         PackageManager pm = getActivity().getPackageManager();
         if (!pm.hasSystemFeature(PackageManager.FEATURE_CAMERA) && !pm.hasSystemFeature(PackageManager.FEATURE_CAMERA_FRONT)) {
@@ -194,16 +204,20 @@ public class CrimeFragment extends MvpAppCompatFragment implements CrimeFragment
         return v;
     }
 
-//    @Override
-//    public void onActivityResult(int requestCode, int resultCode, Intent data) {
-//        if (resultCode != Activity.RESULT_OK) return;
-//        if (requestCode == REQUEST_PHOTO) {
-//            String filename = data.getStringExtra(CrimeCameraFragment.EXTRA_PHOTO_FILENAME);
-//            if (filename != null) {
-//
-////                mCrime.setPhoto(filename);
-////                mCallbacks.onCrimeUpdated(mCrime);
-//            }
-//        }
-//    }
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (resultCode != Activity.RESULT_OK) return;
+        if (requestCode == REQUEST_PHOTO) {
+            String filename = data.getStringExtra(CrimeCameraFragment.EXTRA_PHOTO_FILENAME);
+            if (filename != null) {
+
+//                mCrime.setPhoto(filename);
+//                mCallbacks.onCrimeUpdated(mCrime);
+            }
+        }
+        if (requestCode == REQUEST_DATE) {//проверяяем с какого фрагмента пришел ответ
+            String date = data.getStringExtra(DatePickerFragment.EXTRA_DATE);
+            presenter.changeData(date);
+        }
+    }
 }
