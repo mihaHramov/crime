@@ -28,7 +28,7 @@ public class CrimeFragmentPresenter extends MvpPresenter<CrimeFragmentView> {
     }
 
     public void clickChangeDate() {
-        interactor.loadCrime(crime -> getViewState().showDate(crime.getDate()));
+        interactor.loadCrime(crime -> getViewState().showChangeDateCrime(crime.getDate()));
     }
 
     public void changeData(String date) {
