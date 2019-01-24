@@ -79,6 +79,7 @@ public class CrimeFragment extends MvpAppCompatFragment implements CrimeFragment
                 .placeholder(R.drawable.ic_action_account_circle)
                 .error(R.drawable.ic_action_account_circle)
                 .into(mPhotoView);
+        mPhotoView.setOnClickListener(v12 -> presenter.clickOnImage());
     }
 
     private TextWatcher titleWatcher = new TextWatcher() {
@@ -177,8 +178,6 @@ public class CrimeFragment extends MvpAppCompatFragment implements CrimeFragment
             //   Intent i = new Intent(getActivity(), CrimeCameraActivity.class);
             // startActivityForResult(i, REQUEST_PHOTO);
         });
-
-        mPhotoView.setOnClickListener(v12 -> presenter.clickOnImage());
         PackageManager pm = getActivity().getPackageManager();
         if (!pm.hasSystemFeature(PackageManager.FEATURE_CAMERA) && !pm.hasSystemFeature(PackageManager.FEATURE_CAMERA_FRONT)) {
             mPhotoButton.setEnabled(false);
