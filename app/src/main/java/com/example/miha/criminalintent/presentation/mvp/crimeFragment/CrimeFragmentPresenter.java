@@ -12,7 +12,34 @@ public class CrimeFragmentPresenter extends MvpPresenter<CrimeFragmentView> {
         this.interactor = crime;
     }
 
-    public void init(){
-      interactor.loadCrime(crime -> getViewState().showCrime(crime));
+    public void init() {
+        interactor.loadCrime(crime -> {
+            if (!crime.getPhoto().isEmpty()) {
+                getViewState().showPhoto(crime.getPhoto());
+            }
+            if (crime.getSuspect().getId() > 0) {
+                getViewState().showSuspect(crime.getSuspect());
+            }
+            getViewState().showDate(crime.getDate());
+            getViewState().showIsSolved(crime.getSolved());
+            getViewState().showTitle(crime.getTitle());
+            getViewState().showDate(crime.getDate());
+        });
+    }
+
+    public void clickChangeDate() {
+        interactor.loadCrime(crime -> getViewState().showDate(crime.getDate()));
+    }
+
+    public void changeData(String date) {
+        interactor.loadCrime(crime -> {
+            crime.setDate(date);
+            getViewState().showDate(date);
+        });
+
+    }
+
+    public void clickOnImage() {
+        interactor.loadCrime(crime -> getViewState().showBigImageInDialog(crime.getPhoto()));
     }
 }
