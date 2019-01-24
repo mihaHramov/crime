@@ -24,10 +24,11 @@
         <activity
             android:name=".presentation.ui.activity.CrimePagerActivity"
             android:label="@string/app_name" />
-<!--
-        <activity android:name=".presentation.ui.activity.CrimeCameraActivity"
-            android:screenOrientation="landscape"
-            android:label="@string/app_name"/>-->
+
+        <activity
+            android:name=".presentation.ui.activity.CrimeCameraActivity"
+            android:label="@string/app_name"
+            android:screenOrientation="landscape" />
     </application>
 
 </manifest>
