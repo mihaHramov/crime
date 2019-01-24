@@ -104,5 +104,6 @@ public class DatePickerFragment extends MvpAppCompatDialogFragment implements Da
     @Override
     public void changeDateCrime(String datetime) {
         BusProvider.getInstance().post(new OnChangeDateCrime(datetime));
+        dismiss();
     }
 }
