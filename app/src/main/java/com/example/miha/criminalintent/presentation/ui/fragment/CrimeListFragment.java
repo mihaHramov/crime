@@ -14,11 +14,14 @@ import com.arellomobile.mvp.MvpAppCompatFragment;
 import com.arellomobile.mvp.presenter.InjectPresenter;
 import com.arellomobile.mvp.presenter.ProvidePresenter;
 import com.example.miha.criminalintent.R;
+import com.example.miha.criminalintent.domain.events.BusProvider;
+import com.example.miha.criminalintent.domain.events.OnChangeCrimeEvent;
 import com.example.miha.criminalintent.domain.model.Crime;
 import com.example.miha.criminalintent.presentation.mvp.crimeListFragment.CrimeListFragmentPresenter;
 import com.example.miha.criminalintent.presentation.mvp.crimeListFragment.CrimeListFragmentsView;
 import com.example.miha.criminalintent.presentation.ui.ApplicationCrime;
 import com.example.miha.criminalintent.presentation.ui.adapter.CrimeRecyclerViewAdapter;
+import com.squareup.otto.Subscribe;
 
 import java.util.List;
 
@@ -85,12 +88,19 @@ public class CrimeListFragment extends MvpAppCompatFragment implements
             popup.show();
         });
         recyclerView.setAdapter(adapter);
+        BusProvider.getInstance().register(this);
         return v;
     }
 
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        BusProvider.getInstance().unregister(this);
+    }
 
-    public void updateUI() {
-        presenter.init();
+    @Subscribe
+    public void onItemCrimeChange(OnChangeCrimeEvent event) {
+        adapter.update(event.getCrime());
     }
 
 
