@@ -7,6 +7,8 @@ import com.example.miha.criminalintent.di.crimeListActivity.CrimeListActivityCom
 import com.example.miha.criminalintent.di.crimeListFragment.CrimeListFragmentComponnent;
 import com.example.miha.criminalintent.di.crimePagerActivity.CrimePagerActivityComponent;
 import com.example.miha.criminalintent.di.crimePagerActivity.CrimePagerActivityModule;
+import com.example.miha.criminalintent.di.datePickerFragment.DatePickerComponent;
+import com.example.miha.criminalintent.di.datePickerFragment.DatePickerModule;
 import com.example.miha.criminalintent.di.global.ApiModule;
 import com.example.miha.criminalintent.di.global.RepositoryModule;
 import com.example.miha.criminalintent.di.global.SchedulerModule;
@@ -24,4 +26,5 @@ public interface ApplicationComponent {
     CrimeListActivityComponent getCrimeListActivityComponent();
     CrimeFragmentComponent getCrimeFragmentComponent(CrimeFragmentModule crimeFragmentModule);
     CrimePagerActivityComponent getPagerActivityComponent(CrimePagerActivityModule module);
+    DatePickerComponent getDatePickerComponent(DatePickerModule module);
 }
