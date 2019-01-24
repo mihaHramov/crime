@@ -10,6 +10,8 @@ import com.example.miha.criminalintent.di.crimeListActivity.CrimeListActivityCom
 import com.example.miha.criminalintent.di.crimeListFragment.CrimeListFragmentComponnent;
 import com.example.miha.criminalintent.di.crimePagerActivity.CrimePagerActivityComponent;
 import com.example.miha.criminalintent.di.crimePagerActivity.CrimePagerActivityModule;
+import com.example.miha.criminalintent.di.datePickerFragment.DatePickerComponent;
+import com.example.miha.criminalintent.di.datePickerFragment.DatePickerModule;
 import com.example.miha.criminalintent.domain.model.Crime;
 
 public class ApplicationCrime extends android.app.Application {
@@ -17,6 +19,10 @@ public class ApplicationCrime extends android.app.Application {
 
     public static AuthComponent getAuthComponent() {
         return component.getAuthComponent();
+    }
+
+    public static DatePickerComponent getDatePickerComponent(String string) {
+        return component.getDatePickerComponent(new DatePickerModule(string));
     }
 
     @Override
