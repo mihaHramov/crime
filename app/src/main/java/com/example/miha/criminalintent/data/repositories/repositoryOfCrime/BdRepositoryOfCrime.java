@@ -17,7 +17,7 @@ import java.util.Map;
 
 
 public class BdRepositoryOfCrime extends SQLiteOpenHelper {
-    private static final int DATABASE_VERSION = 1;
+    private static final int DATABASE_VERSION = 2;
     private static final String DATABASE_NAME = "CrimeDb";
 
     private static final String USER_TABLE = "users";
@@ -120,7 +120,7 @@ public class BdRepositoryOfCrime extends SQLiteOpenHelper {
                 User suspect = getUserFromCrime(cursor, suspectNameidCol, suspectIdCol, suspectPhotoCol, suspectServerIdCol);
                 Crime crime = getCrime(cursor, titleIdCol, crimeDateCol, crimePhotoColl, crimeisSolvedColl, crimeIdColl);
                 crime.setAuthor(author);
-               // crime.setId();
+                // crime.setId();
                 crime.setSuspect(suspect);
                 crime.setComments(new ArrayList<>());
                 crimeList.add(crime);
@@ -220,7 +220,22 @@ public class BdRepositoryOfCrime extends SQLiteOpenHelper {
     }
 
     public Boolean update(Crime crime) {
-        return null;
+        SQLiteDatabase db = getWritableDatabase();
+        ContentValues cv = new ContentValues();
+
+        cv.put(CRIME_PHOTO, crime.getPhoto());
+        cv.put(CRIME_DATE, crime.getDate());
+        cv.put(CRIME_SOLVED, crime.getSolved());
+        cv.put(CRIME_TITLE, crime.getTitle());
+        if (crime.getAuthor() != null) {
+            cv.put(CRIME_AUTHOR, crime.getAuthor().getId());
+        }
+        if (crime.getSuspect() != null) {
+            cv.put(CRIME_SUSPECT, crime.getSuspect().getId());
+        }
+        int updCount = db.update(CRIME_TABLE, cv, CRIME_ID + " = ?",
+                new String[]{crime.getId().toString()});
+        return updCount > 0;
     }
 
     public Boolean delete(Crime crime) {

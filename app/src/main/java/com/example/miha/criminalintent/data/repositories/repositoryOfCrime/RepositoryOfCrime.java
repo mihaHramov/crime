@@ -19,12 +19,12 @@ public class RepositoryOfCrime implements IRepositoryOfCrime {
     }
 
     @Override
-    public Boolean update(Crime crime) {
-        return null;
+    public Observable<Boolean> update(Crime crime) {
+        return Observable.fromCallable(() -> bdRepositoryOfCrime.update(crime));
     }
 
     @Override
-    public Boolean delete(Crime crime) {
+    public Observable<Boolean> delete(Crime crime) {
         return null;
     }
 

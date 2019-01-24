@@ -1,9 +1,11 @@
 package com.example.miha.criminalintent.di.crimeFragment;
 
+import com.example.miha.criminalintent.data.repositories.repositoryOfCrime.IRepositoryOfCrime;
 import com.example.miha.criminalintent.domain.crimeFragment.CrimeFragmentInteractor;
 import com.example.miha.criminalintent.domain.crimeFragment.ICrimeFragmentInteractor;
 import com.example.miha.criminalintent.domain.model.Crime;
 import com.example.miha.criminalintent.presentation.mvp.crimeFragment.CrimeFragmentPresenter;
+import com.example.miha.criminalintent.presentation.ui.utils.ISchedulersProvider;
 
 import dagger.Module;
 import dagger.Provides;
@@ -17,8 +19,8 @@ public class CrimeFragmentModule {
     }
 
     @Provides
-    ICrimeFragmentInteractor interactor() {
-        return new CrimeFragmentInteractor(crime);
+    ICrimeFragmentInteractor interactor(IRepositoryOfCrime repositoryOfCrime, ISchedulersProvider provider) {
+        return new CrimeFragmentInteractor(crime,repositoryOfCrime,provider);
     }
 
     @Provides
