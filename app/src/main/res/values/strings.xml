@@ -29,4 +29,6 @@
     <string name="password">password</string>
     <string name="auth">Войти</string>
     <string name="new_user">новый пользователь</string>
+    <string name="ok">OK</string>
+    <string name="cancel">@android:string/cancel</string>
 </resources>

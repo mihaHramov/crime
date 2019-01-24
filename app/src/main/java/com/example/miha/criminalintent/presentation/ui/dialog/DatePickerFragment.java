@@ -1,104 +1,108 @@
 package com.example.miha.criminalintent.presentation.ui.dialog;
 
-import android.app.Activity;
-import android.app.AlertDialog;
-import android.app.Dialog;
-import android.content.DialogInterface;
-import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
-import android.support.v4.app.DialogFragment;
+import android.support.annotation.Nullable;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.DatePicker;
-import android.widget.TimePicker;
 
+import com.arellomobile.mvp.MvpAppCompatDialogFragment;
+import com.arellomobile.mvp.presenter.InjectPresenter;
+import com.arellomobile.mvp.presenter.ProvidePresenter;
 import com.example.miha.criminalintent.R;
+import com.example.miha.criminalintent.domain.events.BusProvider;
+import com.example.miha.criminalintent.domain.events.OnChangeDateCrime;
+import com.example.miha.criminalintent.presentation.mvp.datePicketFragment.DatePickerFragmentPresenter;
+import com.example.miha.criminalintent.presentation.mvp.datePicketFragment.DatePickerView;
+import com.example.miha.criminalintent.presentation.ui.ApplicationCrime;
 
 import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
 
-/**
- * Created by miha on 23.08.2016.
- */
-public class DatePickerFragment extends DialogFragment {
-    public static final String EXTRA_DATE = "com.bignerdranch.android.criminalintent.date";
+import butterknife.BindView;
+import butterknife.ButterKnife;
+import butterknife.OnClick;
 
+public class DatePickerFragment extends MvpAppCompatDialogFragment implements DatePickerView {
+    private static final String EXTRA_DATE = "com.bignerdranch.android.criminalintent.date";
+    @BindView(R.id.dialog_date_datePicker)
+    DatePicker datePicker;
 
-    private void sendResult(int resultCode) {
-        if (getTargetFragment() == null)
-            return;
-        Intent i = new Intent();
-        i.putExtra(EXTRA_DATE, mDate);
+    @InjectPresenter
+    DatePickerFragmentPresenter presenter;
 
-        getTargetFragment()
-                .onActivityResult(getTargetRequestCode(), resultCode, i);
+    @ProvidePresenter
+    DatePickerFragmentPresenter providePresenter() {
+        presenter = ApplicationCrime.getDatePickerComponent(getArguments().getString(EXTRA_DATE)).getPresenter();
+        presenter.init();
+        return presenter;
     }
 
-    @NonNull
+    @OnClick(R.id.cancel)
+    void clickOnCancel() {
+        presenter.clickOnCancel();
+    }
+
+    @OnClick(R.id.ok)
+    void clickOk() {
+        presenter.clickOk();
+    }
+
+    @Nullable
     @Override
-    public Dialog onCreateDialog(Bundle savedInstanceState) {
-        mDate = (Date) getArguments().getSerializable(EXTRA_DATE);// получил аргументы из фрагмента
-
-        // создание объекта Calendar для получения года, месяца и дня
-        Calendar calendar = Calendar.getInstance();
-        calendar.setTime(mDate);
-        int year = calendar.get(Calendar.YEAR);
-        int month = calendar.get(Calendar.MONTH);
-        int day = calendar.get(Calendar.DAY_OF_MONTH);
-
-        View v = getActivity().getLayoutInflater().inflate(R.layout.dialog_data, null);
-
-        DatePicker datePicker = (DatePicker) v.findViewById(R.id.dialog_date_datePicker);
-        final TimePicker timePicker = (TimePicker) v.findViewById(R.id.dialog_date_timePicker);
-
-        timePicker.setOnTimeChangedListener(new TimePicker.OnTimeChangedListener() {
-            @Override
-            public void onTimeChanged(TimePicker view, int hourOfDay, int minute) {
-                Calendar m = new GregorianCalendar();
-                m.setTime(mDate);//установил текущую дату
-                m.set(Calendar.MINUTE, minute);
-                m.set(Calendar.HOUR, hourOfDay);
-                mDate = m.getTime();
-            }
-        });
-
-
-        datePicker.init(year, month, day, new DatePicker.OnDateChangedListener() {
-            @Override
-            public void onDateChanged(DatePicker view, int year, int monthOfYear, int dayOfMonth) {
-                // mDate =
-                GregorianCalendar m = new GregorianCalendar(year, monthOfYear, dayOfMonth);
-                m.setTime(mDate);
-                m.set(Calendar.YEAR, year);
-                m.set(Calendar.MONTH, monthOfYear);
-                m.set(Calendar.DAY_OF_MONTH, dayOfMonth);
-                mDate = m.getTime();
-                // обновление аргумента для сохранения
-                // выбранного значения при повороте
-                getArguments().putSerializable(EXTRA_DATE, mDate);
-            }
-        });
-        return new AlertDialog.Builder(getActivity())
-                .setView(v)
-                .setTitle(R.string.date_picker_title)
-                .setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        sendResult(Activity.RESULT_OK);
-                    }
-                })
-                .create();
+    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+        View v = inflater.inflate(R.layout.dialog_data, container, false);
+        ButterKnife.bind(this, v);
+        return v;
     }
 
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        BusProvider.getInstance().register(this);
+    }
 
-    private Date mDate;
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        BusProvider.getInstance().unregister(this);
+    }
 
-    public static DatePickerFragment newInstance(Date date) {
+    @Override
+    public void close() {
+        dismiss();
+    }
+
+    public static DatePickerFragment newInstance(String date) {
         Bundle args = new Bundle();
-        args.putSerializable(EXTRA_DATE, date);
+        args.putString(EXTRA_DATE, date);
         DatePickerFragment fragment = new DatePickerFragment();
         fragment.setArguments(args);
         return fragment;
+    }
+
+    @Override
+    public void initDateView(Date date) {
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTime(date);
+        int year = calendar.get(Calendar.YEAR);
+        int month = calendar.get(Calendar.MONTH);
+        int day = calendar.get(Calendar.DAY_OF_MONTH);
+        datePicker.init(year, month, day, (view, year1, monthOfYear, dayOfMonth) -> {
+            GregorianCalendar m = new GregorianCalendar(year1, monthOfYear, dayOfMonth);
+            m.setTime(date);
+            m.set(Calendar.YEAR, year1);
+            m.set(Calendar.MONTH, monthOfYear);
+            m.set(Calendar.DAY_OF_MONTH, dayOfMonth);
+            presenter.changeDate(m.getTime());
+        });
+    }
+
+    @Override
+    public void changeDateCrime(String datetime) {
+        BusProvider.getInstance().post(new OnChangeDateCrime(datetime));
     }
 }
