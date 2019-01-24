@@ -1,5 +1,7 @@
 package com.example.miha.criminalintent.presentation.ui.fragment;
 
+import android.app.Activity;
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -38,8 +40,8 @@ import butterknife.ButterKnife;
 public class CrimeFragment extends MvpAppCompatFragment implements CrimeFragmentView {
     private static final String EXTRA_CRIME = CrimeFragment.class.getCanonicalName();
     private FragmentManager fm;
-    // private static final int REQUEST_PHOTO = 1;
-     private static final String DIALOG_IMAGE = "image";
+    private static final int REQUEST_PHOTO = 1;
+    private static final String DIALOG_IMAGE = "image";
 
     @BindView(R.id.crime_title)
     EditText mTitleField;
@@ -79,7 +81,7 @@ public class CrimeFragment extends MvpAppCompatFragment implements CrimeFragment
                 .placeholder(R.drawable.ic_action_account_circle)
                 .error(R.drawable.ic_action_account_circle)
                 .into(mPhotoView);
-        mPhotoView.setOnClickListener(v12 -> presenter.clickOnImage());
+        mPhotoView.setOnClickListener(v -> presenter.clickOnImage());
     }
 
     private TextWatcher titleWatcher = new TextWatcher() {
@@ -90,7 +92,7 @@ public class CrimeFragment extends MvpAppCompatFragment implements CrimeFragment
 
         @Override
         public void onTextChanged(CharSequence s, int start, int before, int count) {
-
+            presenter.changeTitle(s.toString());
         }
 
         @Override
@@ -141,8 +143,7 @@ public class CrimeFragment extends MvpAppCompatFragment implements CrimeFragment
     @Override
     public void showIsSolved(Boolean isSolved) {
         mSolvedCheckBox.setChecked(isSolved);
-        mSolvedCheckBox.setOnCheckedChangeListener((buttonView, isChecked) -> {
-        });
+        mSolvedCheckBox.setOnCheckedChangeListener((buttonView, isChecked) -> presenter.solved(isChecked));
     }
 
     @Override
@@ -155,12 +156,12 @@ public class CrimeFragment extends MvpAppCompatFragment implements CrimeFragment
         DatePickerFragment.newInstance(date).show(fm, "");
     }
 
-    //
-//    @Override
-//    public void onPause() {
-//        super.onPause();
-//        //CrimeLab.get(getActivity()).saveCrimes();
-//    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        presenter.onPause();
+    }
 
 
     @Override
@@ -192,16 +193,17 @@ public class CrimeFragment extends MvpAppCompatFragment implements CrimeFragment
         });
         return v;
     }
-//
+
 //    @Override
 //    public void onActivityResult(int requestCode, int resultCode, Intent data) {
 //        if (resultCode != Activity.RESULT_OK) return;
 //        if (requestCode == REQUEST_PHOTO) {
 //            String filename = data.getStringExtra(CrimeCameraFragment.EXTRA_PHOTO_FILENAME);
 //            if (filename != null) {
-//                mCrime.setPhoto(filename);
-//                showPhoto();
-//                mCallbacks.onCrimeUpdated(mCrime);
+//
+////                mCrime.setPhoto(filename);
+////                mCallbacks.onCrimeUpdated(mCrime);
 //            }
 //        }
+//    }
 }

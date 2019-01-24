@@ -42,4 +42,16 @@ public class CrimeFragmentPresenter extends MvpPresenter<CrimeFragmentView> {
     public void clickOnImage() {
         interactor.loadCrime(crime -> getViewState().showBigImageInDialog(crime.getPhoto()));
     }
+
+    public void onPause() {
+        interactor.saveCrime();
+    }
+
+    public void changeTitle(String string) {
+        interactor.loadCrime(crime -> crime.setTitle(string));
+    }
+
+    public void solved(Boolean isChecked) {
+        interactor.loadCrime(crime -> crime.setSolved(isChecked));
+    }
 }
