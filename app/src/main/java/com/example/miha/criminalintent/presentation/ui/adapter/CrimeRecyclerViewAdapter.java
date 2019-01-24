@@ -18,12 +18,24 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 
 public class CrimeRecyclerViewAdapter extends RecyclerView.Adapter<CrimeRecyclerViewAdapter.ViewHolder> {
+    public void update(Crime crime) {
+        Integer id = 0;
+        for (Crime cr : crimes) {
+            if (cr.getId().equals(crime.getId())) {
+                crimes.set(id,crime);
+                notifyItemChanged(id);
+                break;
+            }
+            id++;
+        }
+    }
+
     public interface OnItemClick {
         void click(Crime crime);
     }
 
     public interface OnItemLongClick {
-        void click(Crime crime,View view);
+        void click(Crime crime, View view);
     }
 
     private List<Crime> crimes = new ArrayList<>();
@@ -52,7 +64,7 @@ public class CrimeRecyclerViewAdapter extends RecyclerView.Adapter<CrimeRecycler
         viewHolder.bind(crimes.get(i));
 
         viewHolder.itemView.setOnLongClickListener(view -> {
-            itemLongClickListener.click(crimes.get(viewHolder.getAdapterPosition()),view);
+            itemLongClickListener.click(crimes.get(viewHolder.getAdapterPosition()), view);
             return false;
         });
         viewHolder.itemView.setOnClickListener(view -> itemClickListener.click(crimes.get(viewHolder.getAdapterPosition())));
@@ -63,7 +75,7 @@ public class CrimeRecyclerViewAdapter extends RecyclerView.Adapter<CrimeRecycler
         return crimes.size();
     }
 
-     class ViewHolder extends RecyclerView.ViewHolder {
+    class ViewHolder extends RecyclerView.ViewHolder {
         @BindView(R.id.crime_list_item_titleTextView)
         TextView titleTextView;
         @BindView(R.id.crime_list_item_dateTextView)
