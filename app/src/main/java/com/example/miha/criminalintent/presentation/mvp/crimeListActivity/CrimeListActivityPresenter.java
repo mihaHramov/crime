@@ -18,8 +18,10 @@ public class CrimeListActivityPresenter extends MvpPresenter<CrimeListActivityVi
         this.isViewHasTwoPanelInterface = isTwoPanelInterface;
     }
     public void createNewCrime(){
-        interactor.createNewCrime(this::choiceItemCrime);
-        getViewState().updateCrimeList();
+        interactor.createNewCrime(crime -> {
+            choiceItemCrime(crime);
+            getViewState().updateCrimeList();
+        });
     }
 
     public void choiceItemCrime(Crime crime){
