@@ -59,6 +59,8 @@ public class CrimeFragment extends MvpAppCompatFragment implements CrimeFragment
     @BindView(R.id.crime_date)
     Button mDateButton;
 
+    @BindView(R.id.details)
+    EditText mDetails;
     @BindView(R.id.crime_solved)
     CheckBox mSolvedCheckBox;
 
@@ -228,6 +230,20 @@ public class CrimeFragment extends MvpAppCompatFragment implements CrimeFragment
                 startActivityForResult(takePictureIntent, REQUEST_PHOTO);
             }
         }
+    }
+
+    @Override
+    public void showIsEnabled(Boolean bool) {
+        mDateButton.setEnabled(bool);
+        mPhotoButton.setEnabled(bool);
+        mSolvedCheckBox.setEnabled(bool);
+        mDetails.setEnabled(bool);
+        mTitleField.setEnabled(bool);
+    }
+
+    @Override
+    public void showDetails(String details) {
+        mDetails.setText(details);
     }
 
     private File createImageFile() throws IOException {

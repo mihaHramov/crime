@@ -18,6 +18,12 @@ public interface CrimeFragmentView extends MvpView {
     void showTitle(String title);
 
     void showDate(String date);
+
     void sendUpdateUiMessage(Crime crime);
+
     void takePicture();
+
+    void showIsEnabled(Boolean bool);
+
+    void showDetails(String details);
 }
