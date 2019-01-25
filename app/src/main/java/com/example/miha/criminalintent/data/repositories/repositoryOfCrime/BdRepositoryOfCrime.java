@@ -232,6 +232,7 @@ public class BdRepositoryOfCrime extends SQLiteOpenHelper {
         cv.put(CRIME_DATE, crime.getDate());
         cv.put(CRIME_SOLVED, crime.getSolved());
         cv.put(CRIME_TITLE, crime.getTitle());
+        cv.put(CRIME_DETAILS,crime.getDetails());
         if (crime.getAuthor() != null) {
             cv.put(CRIME_AUTHOR, crime.getAuthor().getId());
         }
