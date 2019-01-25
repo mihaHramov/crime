@@ -5,8 +5,6 @@ import com.arellomobile.mvp.MvpPresenter;
 import com.example.miha.criminalintent.domain.crimeListFragment.ICrimeListFragmentInteractor;
 import com.example.miha.criminalintent.domain.model.Crime;
 
-import java.util.List;
-
 @InjectViewState
 public class CrimeListFragmentPresenter extends MvpPresenter<CrimeListFragmentsView> {
     private ICrimeListFragmentInteractor interactor;
@@ -16,17 +14,7 @@ public class CrimeListFragmentPresenter extends MvpPresenter<CrimeListFragmentsV
     }
 
     public CrimeListFragmentPresenter init(){
-        interactor.getAllCrimes(new ICrimeListFragmentInteractor.Callback() {
-            @Override
-            public void onSuccess(List<Crime> crimes) {
-                getViewState().showCrimes(crimes);
-            }
-
-            @Override
-            public void onError() {
-
-            }
-        });
+        interactor.getAllCrimes(crimes -> getViewState().showCrimes(crimes));
 
         return this;
     }

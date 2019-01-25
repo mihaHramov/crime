@@ -7,7 +7,6 @@ import java.util.List;
 public interface ICrimeListFragmentInteractor {
     interface Callback {
         void onSuccess(List<Crime> crimes);
-        void onError();
     }
     void getAllCrimes(Callback callback);
 }
