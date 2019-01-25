@@ -103,6 +103,9 @@ public class CrimeListFragment extends MvpAppCompatFragment implements
         adapter.update(event.getCrime());
     }
 
+    public void onCreateCrime(){
+        presenter.init();
+    }
 
     @Override
     public void showDetailsCrime(Crime crime) {
