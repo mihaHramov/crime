@@ -97,6 +97,23 @@ public class CrimeFragment extends MvpAppCompatFragment implements CrimeFragment
         mPhotoView.setOnClickListener(v -> presenter.clickOnImage());
     }
 
+    private TextWatcher detailsWatcher = new TextWatcher() {
+        @Override
+        public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+        }
+
+        @Override
+        public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+            presenter.changeDetails(charSequence.toString());
+        }
+
+        @Override
+        public void afterTextChanged(Editable editable) {
+
+        }
+    };
+
     private TextWatcher titleWatcher = new TextWatcher() {
         @Override
         public void beforeTextChanged(CharSequence s, int start, int count, int after) {
@@ -243,7 +260,9 @@ public class CrimeFragment extends MvpAppCompatFragment implements CrimeFragment
 
     @Override
     public void showDetails(String details) {
+        mDetails.removeTextChangedListener(detailsWatcher);
         mDetails.setText(details);
+        mDetails.addTextChangedListener(detailsWatcher);
     }
 
     private File createImageFile() throws IOException {

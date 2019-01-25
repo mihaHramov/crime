@@ -78,4 +78,10 @@ public class CrimeFragmentPresenter extends MvpPresenter<CrimeFragmentView> {
             getViewState().showPhoto(tempFile);
         });
     }
+
+    public void changeDetails(String string) {
+        interactor.loadCrime(crime -> {
+            crime.setDetails(string);
+        });
+    }
 }
