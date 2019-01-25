@@ -3,7 +3,10 @@ package com.example.miha.criminalintent.presentation.ui.fragment;
 import android.app.Activity;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.net.Uri;
 import android.os.Bundle;
+import android.os.Environment;
+import android.provider.MediaStore;
 import android.support.annotation.NonNull;
 import android.support.v4.app.FragmentManager;
 import android.text.Editable;
@@ -16,21 +19,27 @@ import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.Toast;
 
 import com.arellomobile.mvp.MvpAppCompatFragment;
 import com.arellomobile.mvp.presenter.InjectPresenter;
 import com.arellomobile.mvp.presenter.ProvidePresenter;
 import com.example.miha.criminalintent.R;
 import com.example.miha.criminalintent.domain.events.BusProvider;
+import com.example.miha.criminalintent.domain.events.OnChangeCrimeEvent;
 import com.example.miha.criminalintent.domain.model.Crime;
 import com.example.miha.criminalintent.domain.model.User;
 import com.example.miha.criminalintent.presentation.mvp.crimeFragment.CrimeFragmentPresenter;
 import com.example.miha.criminalintent.presentation.mvp.crimeFragment.CrimeFragmentView;
 import com.example.miha.criminalintent.presentation.ui.ApplicationCrime;
-import com.example.miha.criminalintent.presentation.ui.activity.CrimeCameraActivity;
 import com.example.miha.criminalintent.presentation.ui.dialog.DatePickerFragment;
 import com.example.miha.criminalintent.presentation.ui.dialog.ImageFragment;
 import com.squareup.picasso.Picasso;
+
+import java.io.File;
+import java.io.IOException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -43,7 +52,7 @@ public class CrimeFragment extends MvpAppCompatFragment implements CrimeFragment
     private static final int REQUEST_PHOTO = 1;
     private static final int REQUEST_DATE = 2;
     private static final String DIALOG_IMAGE = "image";
-
+    private PackageManager pm;
 
     @BindView(R.id.crime_title)
     EditText mTitleField;
@@ -81,7 +90,7 @@ public class CrimeFragment extends MvpAppCompatFragment implements CrimeFragment
     public void showPhoto(String photo) {
         Picasso.get().load(photo)
                 .placeholder(R.drawable.ic_action_account_circle)
-                .error(R.drawable.ic_action_account_circle)
+                .error(android.R.drawable.stat_notify_error)
                 .into(mPhotoView);
         mPhotoView.setOnClickListener(v -> presenter.clickOnImage());
     }
@@ -102,6 +111,11 @@ public class CrimeFragment extends MvpAppCompatFragment implements CrimeFragment
 
         }
     };
+
+    @Override
+    public void sendUpdateUiMessage(Crime crime) {
+        BusProvider.getInstance().post(new OnChangeCrimeEvent(crime));
+    }
 
     public static CrimeFragment newInstance(Crime crime) {
         Bundle args = new Bundle();
@@ -124,11 +138,6 @@ public class CrimeFragment extends MvpAppCompatFragment implements CrimeFragment
         super.onDestroy();
         BusProvider.getInstance().unregister(this);
     }
-
-//    @Subscribe
-//    public void changeDateCrime(OnChangeDateCrime onChangeDateCrime) {
-//        presenter.changeData(onChangeDateCrime.getDate());
-//    }
 
 
     @Override
@@ -185,11 +194,10 @@ public class CrimeFragment extends MvpAppCompatFragment implements CrimeFragment
         View v = inflater.inflate(R.layout.fragment_crime, parent, false);
         ButterKnife.bind(this, v);
         mDateButton.setOnClickListener(v15 -> presenter.clickChangeDate());
-        mPhotoButton.setOnClickListener(v1 -> {
-            Intent i = new Intent(getActivity(), CrimeCameraActivity.class);
-            startActivityForResult(i, REQUEST_PHOTO);
-        });
-        PackageManager pm = getActivity().getPackageManager();
+        pm = getActivity().getPackageManager();
+
+        mPhotoButton.setOnClickListener(v1 -> presenter.takePicture());
+
         if (!pm.hasSystemFeature(PackageManager.FEATURE_CAMERA) && !pm.hasSystemFeature(PackageManager.FEATURE_CAMERA_FRONT)) {
             mPhotoButton.setEnabled(false);
         }
@@ -205,15 +213,35 @@ public class CrimeFragment extends MvpAppCompatFragment implements CrimeFragment
     }
 
     @Override
+    public void takePicture() {
+        Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+        if (takePictureIntent.resolveActivity(pm) != null) {
+            File mPhotoFile = null;
+            try {
+                mPhotoFile = createImageFile();
+            } catch (IOException ex) {
+                Toast.makeText(getActivity(), getString(R.string.file_error), Toast.LENGTH_LONG).show();
+            }
+            if (mPhotoFile != null) {
+                takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, Uri.fromFile(mPhotoFile));
+                presenter.createPhoto("file://" + mPhotoFile.getAbsolutePath());
+                startActivityForResult(takePictureIntent, REQUEST_PHOTO);
+            }
+        }
+    }
+
+    private File createImageFile() throws IOException {
+        String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
+        String imageFileName = "JPEG_" + timeStamp + "_";
+        File storageDir = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES);
+        return File.createTempFile(imageFileName, ".jpg", storageDir);
+    }
+
+    @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (resultCode != Activity.RESULT_OK) return;
         if (requestCode == REQUEST_PHOTO) {
-            String filename = data.getStringExtra(CrimeCameraFragment.EXTRA_PHOTO_FILENAME);
-            if (filename != null) {
-
-//                mCrime.setPhoto(filename);
-//                mCallbacks.onCrimeUpdated(mCrime);
-            }
+            presenter.changePhoto();
         }
         if (requestCode == REQUEST_DATE) {//проверяяем с какого фрагмента пришел ответ
             String date = data.getStringExtra(DatePickerFragment.EXTRA_DATE);

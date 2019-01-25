@@ -7,6 +7,7 @@ import com.example.miha.criminalintent.domain.crimeFragment.ICrimeFragmentIntera
 @InjectViewState
 public class CrimeFragmentPresenter extends MvpPresenter<CrimeFragmentView> {
     private ICrimeFragmentInteractor interactor;
+    private String tempFile;
 
     public CrimeFragmentPresenter(ICrimeFragmentInteractor crime) {
         this.interactor = crime;
@@ -35,6 +36,7 @@ public class CrimeFragmentPresenter extends MvpPresenter<CrimeFragmentView> {
         interactor.loadCrime(crime -> {
             crime.setDate(date);
             getViewState().showDate(date);
+            getViewState().sendUpdateUiMessage(crime);
         });
 
     }
@@ -53,5 +55,21 @@ public class CrimeFragmentPresenter extends MvpPresenter<CrimeFragmentView> {
 
     public void solved(Boolean isChecked) {
         interactor.loadCrime(crime -> crime.setSolved(isChecked));
+    }
+
+    public void createPhoto(String filename) {
+        tempFile = filename;
+
+    }
+
+    public void takePicture() {
+        getViewState().takePicture();
+    }
+
+    public void changePhoto() {
+          interactor.loadCrime(crime ->{
+               crime.setPhoto(tempFile);
+          getViewState().showPhoto(tempFile);
+        });
     }
 }

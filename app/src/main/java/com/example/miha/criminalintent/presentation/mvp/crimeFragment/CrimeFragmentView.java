@@ -1,6 +1,7 @@
 package com.example.miha.criminalintent.presentation.mvp.crimeFragment;
 
 import com.arellomobile.mvp.MvpView;
+import com.example.miha.criminalintent.domain.model.Crime;
 import com.example.miha.criminalintent.domain.model.User;
 
 public interface CrimeFragmentView extends MvpView {
@@ -17,4 +18,6 @@ public interface CrimeFragmentView extends MvpView {
     void showTitle(String title);
 
     void showDate(String date);
+    void sendUpdateUiMessage(Crime crime);
+    void takePicture();
 }
