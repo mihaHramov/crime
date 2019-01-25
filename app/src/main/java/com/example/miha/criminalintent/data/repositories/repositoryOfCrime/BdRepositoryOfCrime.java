@@ -19,7 +19,7 @@ import java.util.Map;
 
 
 public class BdRepositoryOfCrime extends SQLiteOpenHelper {
-    private static final int DATABASE_VERSION = 2;
+    private static final int DATABASE_VERSION = 3;
     private static final String DATABASE_NAME = "CrimeDb";
 
     private static final String USER_TABLE = "users";
@@ -41,6 +41,7 @@ public class BdRepositoryOfCrime extends SQLiteOpenHelper {
     private static final String CRIME_ID = "id";
     private static final String CRIME_DATE = "date";
     private static final String CRIME_TITLE = "title";
+    private static final String CRIME_DETAILS = "details";
     private static final String CRIME_PHOTO = "photo";
     private static final String CRIME_SOLVED = "solved";
     private static final String CRIME_AUTHOR = "author";
@@ -74,6 +75,7 @@ public class BdRepositoryOfCrime extends SQLiteOpenHelper {
         String crimePhoto = crimeAs + "_" + CRIME_PHOTO;
         String crimeSolved = crimeAs + "_" + CRIME_SOLVED;
         String crimeId = crimeAs + "_" + CRIME_ID;
+        String crimeDetails = crimeAs+"_"+CRIME_DETAILS;
 
         String select = "SELECT " +
                 authorAs + "." + USER_NAME + " AS " + authorName + " , " +
@@ -115,14 +117,13 @@ public class BdRepositoryOfCrime extends SQLiteOpenHelper {
             Integer crimePhotoColl = cursor.getColumnIndex(crimePhoto);
             Integer crimeisSolvedColl = cursor.getColumnIndex(crimeSolved);
             Integer crimeIdColl = cursor.getColumnIndex(crimeId);
-
+            Integer crimeDetailsColl = cursor.getColumnIndex(crimeDetails);
             String temp = "";
             do {
                 User author = getUserFromCrime(cursor, authoeNameidCol, authorIdCol, authorPhotoCol, authorServerIdCol);
                 User suspect = getUserFromCrime(cursor, suspectNameidCol, suspectIdCol, suspectPhotoCol, suspectServerIdCol);
-                Crime crime = getCrime(cursor, titleIdCol, crimeDateCol, crimePhotoColl, crimeisSolvedColl, crimeIdColl);
+                Crime crime = getCrime(cursor, titleIdCol, crimeDateCol, crimePhotoColl, crimeisSolvedColl, crimeIdColl,crimeDetailsColl);
                 crime.setAuthor(author);
-                // crime.setId();
                 crime.setSuspect(suspect);
                 crime.setComments(new ArrayList<>());
                 crimeList.add(crime);
@@ -198,13 +199,14 @@ public class BdRepositoryOfCrime extends SQLiteOpenHelper {
         return crimeList;
     }
 
-    private Crime getCrime(Cursor cursor, Integer titleIdCol, Integer crimeDateCol, Integer crimePhotoColl, Integer crimeisSolvedColl, Integer crimeIdColl) {
+    private Crime getCrime(Cursor cursor, Integer titleIdCol, Integer crimeDateCol, Integer crimePhotoColl, Integer crimeisSolvedColl, Integer crimeIdColl,Integer crimeDetailsColl) {
         Crime crime = new Crime();
         crime.setTitle(cursor.getString(titleIdCol));
         crime.setDate(cursor.getString(crimeDateCol));
         crime.setPhoto(cursor.getString(crimePhotoColl));
         crime.setSolved(cursor.getString(crimeisSolvedColl).equals("true"));
         crime.setId(cursor.getInt(crimeIdColl));
+        crime.setDetails(cursor.getString(crimeDetailsColl));
         return crime;
     }
 
@@ -256,6 +258,7 @@ public class BdRepositoryOfCrime extends SQLiteOpenHelper {
         String datetime = format.format(date);
         crime.setDate(datetime);
         crime.setSolved(false);
+        crime.setDetails(CRIME_DETAILS);
         crime.setComments(new ArrayList<>());
         ContentValues cv = new ContentValues();
 
@@ -264,6 +267,7 @@ public class BdRepositoryOfCrime extends SQLiteOpenHelper {
         cv.put(CRIME_DATE, crime.getDate());
         cv.put(CRIME_PHOTO, crime.getPhoto());
         cv.put(CRIME_AUTHOR, 0);
+        cv.put(CRIME_DETAILS,crime.getDetails());
         crime.setId((int) db.insert(CRIME_TABLE, null, cv));
         db.close();
         return crime;
@@ -292,6 +296,7 @@ public class BdRepositoryOfCrime extends SQLiteOpenHelper {
                 + CRIME_AUTHOR + " INTEGER,"
                 + CRIME_SOLVED + " BOOLEAN,"
                 + CRIME_DATE + " TEXT,"
+                + CRIME_DETAILS + " TEXT,"
                 + CRIME_PHOTO + " TEXT,"
                 + CRIME_TITLE + " TEXT)";
 
