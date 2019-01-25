@@ -19,6 +19,7 @@ public class CrimeListActivityPresenter extends MvpPresenter<CrimeListActivityVi
     }
     public void createNewCrime(){
         interactor.createNewCrime(this::choiceItemCrime);
+        getViewState().updateCrimeList();
     }
 
     public void choiceItemCrime(Crime crime){

@@ -1,6 +1,7 @@
 package com.example.miha.criminalintent.presentation.ui.activity;
 
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
 import android.view.Menu;
 import android.view.MenuItem;
 
@@ -12,6 +13,7 @@ import com.example.miha.criminalintent.presentation.mvp.crimeListActivity.CrimeL
 import com.example.miha.criminalintent.presentation.mvp.crimeListActivity.CrimeListActivityView;
 import com.example.miha.criminalintent.presentation.ui.ApplicationCrime;
 import com.example.miha.criminalintent.presentation.ui.dialog.AuthFragmentDialog;
+import com.example.miha.criminalintent.presentation.ui.fragment.CrimeFragment;
 import com.example.miha.criminalintent.presentation.ui.fragment.CrimeListFragment;
 
 public class CrimeListActivity extends SingleFragmentActivity
@@ -65,26 +67,29 @@ public class CrimeListActivity extends SingleFragmentActivity
 
     @Override
     public void showCrimeInNewActivity(Crime crime) {
-        CrimePagerActivity.startActivity(this,crime);
+        CrimePagerActivity.startActivity(this, crime);
     }
 
     @Override
     public void showCrimeInFragment(Crime uuid) {
-//        getSupportFragmentManager().beginTransaction()
-//                .replace(R.id.detailFragmentContainer, CrimeFragment.newInstance(uuid))
-//                .commit();
+        getSupportFragmentManager().beginTransaction()
+                .replace(R.id.detailFragmentContainer, CrimeFragment.newInstance(uuid))
+                .commit();
     }
-//
-////    @Override
-////    public void onCrimeUpdated(Crime crime) {
-////        FragmentManager fm = getSupportFragmentManager();
-////        CrimeListFragment listFragment = (CrimeListFragment)
-////                fm.findFragmentById(R.id.fragmentContainer);
-////        listFragment.updateUI();
-////    }
+
 
     @Override
     public void showAuth() {
         new AuthFragmentDialog().show(getSupportFragmentManager(), "");
+    }
+
+    @Override
+    public void updateCrimeList() {
+        FragmentManager fm = getSupportFragmentManager();
+        CrimeListFragment listFragment = (CrimeListFragment)
+                fm.findFragmentById(R.id.fragmentContainer);
+        if (listFragment != null) {
+            listFragment.onCreateCrime();
+        }
     }
 }
