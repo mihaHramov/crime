@@ -205,7 +205,7 @@ public class BdRepositoryOfCrime extends SQLiteOpenHelper {
         crime.setTitle(cursor.getString(titleIdCol));
         crime.setDate(cursor.getString(crimeDateCol));
         crime.setPhoto(cursor.getString(crimePhotoColl));
-        crime.setSolved(cursor.getString(crimeisSolvedColl).equals("true"));
+        crime.setSolved(cursor.getString(crimeisSolvedColl).equals("1"));
         crime.setId(cursor.getInt(crimeIdColl));
         crime.setDetails(cursor.getString(crimeDetailsColl));
         return crime;
