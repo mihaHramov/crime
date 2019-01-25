@@ -50,16 +50,21 @@ public class CrimeFragmentPresenter extends MvpPresenter<CrimeFragmentView> {
     }
 
     public void changeTitle(String string) {
-        interactor.loadCrime(crime -> crime.setTitle(string));
+        interactor.loadCrime(crime -> {
+            crime.setTitle(string);
+            getViewState().sendUpdateUiMessage(crime);
+        });
     }
 
     public void solved(Boolean isChecked) {
-        interactor.loadCrime(crime -> crime.setSolved(isChecked));
+        interactor.loadCrime(crime ->{
+            crime.setSolved(isChecked);
+            getViewState().sendUpdateUiMessage(crime);
+        });
     }
 
     public void createPhoto(String filename) {
         tempFile = filename;
-
     }
 
     public void takePicture() {
@@ -67,9 +72,9 @@ public class CrimeFragmentPresenter extends MvpPresenter<CrimeFragmentView> {
     }
 
     public void changePhoto() {
-          interactor.loadCrime(crime ->{
-               crime.setPhoto(tempFile);
-          getViewState().showPhoto(tempFile);
+        interactor.loadCrime(crime -> {
+            crime.setPhoto(tempFile);
+            getViewState().showPhoto(tempFile);
         });
     }
 }
