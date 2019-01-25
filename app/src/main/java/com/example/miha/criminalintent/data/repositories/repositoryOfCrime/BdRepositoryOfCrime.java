@@ -10,7 +10,9 @@ import com.example.miha.criminalintent.domain.model.Comment;
 import com.example.miha.criminalintent.domain.model.Crime;
 import com.example.miha.criminalintent.domain.model.User;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.Hashtable;
 import java.util.List;
 import java.util.Map;
@@ -248,7 +250,11 @@ public class BdRepositoryOfCrime extends SQLiteOpenHelper {
         Crime crime = new Crime();
         crime.setTitle(CRIME_TITLE);
         crime.setPhoto("");
-        crime.setDate("");
+        Date date = new Date();
+        String dateFormat = "yyyy-MM-dd";
+        SimpleDateFormat format = new SimpleDateFormat(dateFormat);
+        String datetime = format.format(date);
+        crime.setDate(datetime);
         crime.setSolved(false);
         crime.setComments(new ArrayList<>());
         ContentValues cv = new ContentValues();
