@@ -11,6 +11,15 @@ public class Crime implements Serializable {
     private String photo;
     private String title;
     private String date;
+    private String details;
+
+    public String getDetails() {
+        return details;
+    }
+
+    public void setDetails(String details) {
+        this.details = details;
+    }
 
     private Boolean solved;
 
