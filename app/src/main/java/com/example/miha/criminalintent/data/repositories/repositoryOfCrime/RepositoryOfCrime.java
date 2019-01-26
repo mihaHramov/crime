@@ -1,6 +1,7 @@
 package com.example.miha.criminalintent.data.repositories.repositoryOfCrime;
 
 import com.example.miha.criminalintent.domain.model.Crime;
+import com.example.miha.criminalintent.domain.model.ItemCrime;
 
 import java.util.List;
 
@@ -14,7 +15,7 @@ public class RepositoryOfCrime implements IRepositoryOfCrime {
     }
 
     @Override
-    public Observable<List<Crime>> getCrimes() {
+    public Observable<List<ItemCrime>> getCrimes() {
         return Observable.fromCallable(() -> bdRepositoryOfCrime.getCrimes());
     }
 

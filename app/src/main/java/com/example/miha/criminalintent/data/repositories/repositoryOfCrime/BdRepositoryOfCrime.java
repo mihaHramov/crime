@@ -8,6 +8,7 @@ import android.database.sqlite.SQLiteOpenHelper;
 
 import com.example.miha.criminalintent.domain.model.Comment;
 import com.example.miha.criminalintent.domain.model.Crime;
+import com.example.miha.criminalintent.domain.model.ItemCrime;
 import com.example.miha.criminalintent.domain.model.User;
 
 import java.text.SimpleDateFormat;
@@ -19,7 +20,7 @@ import java.util.Map;
 
 
 public class BdRepositoryOfCrime extends SQLiteOpenHelper {
-    private static final int DATABASE_VERSION = 4;
+    private static final int DATABASE_VERSION = 5;
     private static final String DATABASE_NAME = "CrimeDb";
 
     private static final String USER_TABLE = "users";
@@ -52,32 +53,51 @@ public class BdRepositoryOfCrime extends SQLiteOpenHelper {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
     }
 
-    public List<Crime> getCrimes() {
+
+    private String getColumnName(String tableName, String columnName) {
+        return tableName + "_" + columnName;
+    }
+
+    private String getSelectCulumn(Map<String, List<String>> map) {
+        String select = "SELECT ";
+        for (Map.Entry<String, List<String>> entry : map.entrySet()) {
+            for (String val : entry.getValue()) {
+                select = select.concat(entry.getKey() + "." + val + " AS " + getColumnName(entry.getKey(), val) + " , ");
+            }
+        }
+        select = select.trim();
+        return select.substring(0, select.length() - 1);
+    }
+
+    public List<ItemCrime> getCrimes() {
         SQLiteDatabase db = this.getWritableDatabase();
-        List<Crime> crimeList = new ArrayList<>();
+        List<ItemCrime> crimeList = new ArrayList<>();
 
         String crimeAs = "crime";
         String authorAs = "author";
         String userSuspect = "suspect";
 
+        String authorName = getColumnName(authorAs, USER_NAME);
+        String authorid = getColumnName(authorAs, USER_ID);
+        String authorPhoto = getColumnName(authorAs, USER_PHOTO);
+        String authorUrlId = getColumnName(authorAs, USER_URL_ID);
 
-        String authorName = authorAs + "_" + USER_NAME;
-        String authorid = authorAs + "_" + USER_ID;
-        String authorPhoto = authorAs + "_" + USER_PHOTO;
-        String authorUrlId = authorAs + "_" + USER_URL_ID;
+        String suspectName = getColumnName(userSuspect, USER_NAME);
+        String suspectid = getColumnName(userSuspect, USER_ID);
+        String suspectPhoto = getColumnName(userSuspect, USER_PHOTO);
+        String suspectUrlId = getColumnName(userSuspect, USER_URL_ID);
 
-        String suspectName = userSuspect + "_" + USER_NAME;
-        String suspectid = userSuspect + "_" + USER_ID;
-        String suspectPhoto = userSuspect + "_" + USER_PHOTO;
-        String suspectUrlId = userSuspect + "_" + USER_URL_ID;
-
-        String crimeName = crimeAs + "_" + CRIME_TITLE;
-        String crimeDate = crimeAs + "_" + CRIME_DATE;
-        String crimePhoto = crimeAs + "_" + CRIME_PHOTO;
-        String crimeSolved = crimeAs + "_" + CRIME_SOLVED;
-        String crimeId = crimeAs + "_" + CRIME_ID;
-        String crimeDetails = crimeAs + "_" + CRIME_DETAILS;
-        String crimePublic = crimeAs + "_" + CRIME_PUBLIC;
+        String crimeName = getColumnName(crimeAs, CRIME_TITLE);
+        String crimeDate = getColumnName(crimeAs, CRIME_DATE);
+        String crimePhoto = getColumnName(crimeAs, CRIME_PHOTO);
+        String crimeSolved = getColumnName(crimeAs, CRIME_SOLVED);
+        String crimeId = getColumnName(crimeAs, CRIME_ID);
+        String crimeDetails = getColumnName(crimeAs, CRIME_DETAILS);
+        String crimePublic = getColumnName(crimeAs, CRIME_PUBLIC);
+//        Map<String, List<String>> listSelect = new Hashtable<>();
+//        listSelect.put(authorAs, Arrays.asList(USER_NAME, USER_ID, USER_PHOTO, USER_URL_ID));
+//        listSelect.put(userSuspect, Arrays.asList(USER_NAME, USER_ID, USER_PHOTO, USER_URL_ID));
+//        listSelect.put(crimeAs, Arrays.asList(CRIME_TITLE, CRIME_DATE, CRIME_PHOTO, CRIME_SOLVED, CRIME_ID, CRIME_DETAILS, CRIME_PUBLIC));
 
         String select = "SELECT " +
                 authorAs + "." + USER_NAME + " AS " + authorName + " , " +
@@ -97,7 +117,6 @@ public class BdRepositoryOfCrime extends SQLiteOpenHelper {
                 crimeAs + "." + CRIME_DETAILS + " AS " + crimeDetails + " , " +
                 crimeAs + "." + CRIME_PUBLIC + " AS " + crimePublic + " , " +
                 crimeAs + "." + CRIME_ID + " AS " + crimeId;
-
         String from = " FROM " + CRIME_TABLE + " AS " + crimeAs +
                 " LEFT JOIN " + USER_TABLE + " AS " + authorAs + " ON " + crimeAs + "." + CRIME_AUTHOR + "=" + authorAs + "." + USER_ID +
                 " LEFT JOIN " + USER_TABLE + " AS " + userSuspect + " ON " + crimeAs + "." + CRIME_SUSPECT + "=" + userSuspect + "." + USER_ID;
@@ -124,15 +143,20 @@ public class BdRepositoryOfCrime extends SQLiteOpenHelper {
             Integer crimeDetailsColl = cursor.getColumnIndex(crimeDetails);
             Integer crimePubliclsColl = cursor.getColumnIndex(crimePublic);
             String temp = "";
+            Integer number = 0;
             do {
                 User author = getUserFromCrime(cursor, authoeNameidCol, authorIdCol, authorPhotoCol, authorServerIdCol);
                 User suspect = getUserFromCrime(cursor, suspectNameidCol, suspectIdCol, suspectPhotoCol, suspectServerIdCol);
-                Crime crime = getCrime(cursor, titleIdCol, crimeDateCol, crimePhotoColl, crimeisSolvedColl, crimeIdColl, crimeDetailsColl,crimePubliclsColl);
+                Crime crime = getCrime(cursor, titleIdCol, crimeDateCol, crimePhotoColl, crimeisSolvedColl, crimeIdColl, crimeDetailsColl, crimePubliclsColl);
                 crime.setAuthor(author);
                 crime.setSuspect(suspect);
                 crime.setComments(new ArrayList<>());
-                crimeList.add(crime);
+                ItemCrime itemCrime = new ItemCrime();
+                itemCrime.setPosition(number);
+                itemCrime.setCrime(crime);
+                crimeList.add(itemCrime);
                 temp = temp.concat(crime.getId() + ",");
+                number++;
             } while (cursor.moveToNext());
             temp = temp.substring(0, temp.length() - 1);
 
@@ -192,9 +216,9 @@ public class BdRepositoryOfCrime extends SQLiteOpenHelper {
 
                 } while (cursorComment.moveToNext());
 
-                for (Crime cr : crimeList) {
-                    if (map.containsKey(cr.getId())) {
-                        cr.setComments(map.get(cr.getId()));
+                for (ItemCrime cr : crimeList) {
+                    if (map.containsKey(cr.getCrime().getId())) {
+                        cr.getCrime().setComments(map.get(cr.getCrime().getId()));
                     }
                 }
             }
@@ -217,7 +241,8 @@ public class BdRepositoryOfCrime extends SQLiteOpenHelper {
         crime.setDate(cursor.getString(crimeDateCol));
         crime.setPhoto(cursor.getString(crimePhotoColl));
         crime.setSolved(cursor.getString(crimeisSolvedColl).equals("1"));
-        crime.setPublick(cursor.getString(crimePubliclsColl).equals("1"));
+        String str = cursor.getString(crimePubliclsColl);
+        crime.setPublick(str.equals("1"));
         crime.setId(cursor.getInt(crimeIdColl));
         crime.setDetails(cursor.getString(crimeDetailsColl));
         return crime;
@@ -244,7 +269,7 @@ public class BdRepositoryOfCrime extends SQLiteOpenHelper {
         cv.put(CRIME_DATE, crime.getDate());
         cv.put(CRIME_SOLVED, crime.getSolved());
         cv.put(CRIME_TITLE, crime.getTitle());
-        cv.put(CRIME_DETAILS,crime.getDetails());
+        cv.put(CRIME_DETAILS, crime.getDetails());
         if (crime.getAuthor() != null) {
             cv.put(CRIME_AUTHOR, crime.getAuthor().getId());
         }
@@ -282,6 +307,7 @@ public class BdRepositoryOfCrime extends SQLiteOpenHelper {
         cv.put(CRIME_DATE, crime.getDate());
         cv.put(CRIME_PHOTO, crime.getPhoto());
         cv.put(CRIME_AUTHOR, 0);
+        cv.put(CRIME_PUBLIC, crime.getPublick());
         cv.put(CRIME_DETAILS, crime.getDetails());
         crime.setId((int) db.insert(CRIME_TABLE, null, cv));
         db.close();

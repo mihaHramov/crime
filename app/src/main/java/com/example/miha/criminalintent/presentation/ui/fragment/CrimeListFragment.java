@@ -17,6 +17,7 @@ import com.example.miha.criminalintent.R;
 import com.example.miha.criminalintent.domain.events.BusProvider;
 import com.example.miha.criminalintent.domain.events.OnChangeCrimeEvent;
 import com.example.miha.criminalintent.domain.model.Crime;
+import com.example.miha.criminalintent.domain.model.ItemCrime;
 import com.example.miha.criminalintent.presentation.mvp.crimeListFragment.CrimeListFragmentPresenter;
 import com.example.miha.criminalintent.presentation.mvp.crimeListFragment.CrimeListFragmentsView;
 import com.example.miha.criminalintent.presentation.ui.ApplicationCrime;
@@ -28,8 +29,7 @@ import java.util.List;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
-public class CrimeListFragment extends MvpAppCompatFragment implements
-        CrimeListFragmentsView {
+public class CrimeListFragment extends MvpAppCompatFragment implements CrimeListFragmentsView {
     @BindView(R.id.recycler_view)
     RecyclerView recyclerView;
 
@@ -63,7 +63,7 @@ public class CrimeListFragment extends MvpAppCompatFragment implements
     }
 
     @Override
-    public void showCrimes(List<Crime> crimes) {
+    public void showCrimes(List<ItemCrime> crimes) {
         adapter.setCrimes(crimes);
     }
 

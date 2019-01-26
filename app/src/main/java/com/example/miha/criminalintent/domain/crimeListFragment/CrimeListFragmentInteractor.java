@@ -17,8 +17,9 @@ public class CrimeListFragmentInteractor implements ICrimeListFragmentInteractor
 
     @Override
     public void getAllCrimes(Callback callback) {
-        api.getAllCrimes()
-                .onErrorResumeNext(throwable -> repositoryOfCrime.getCrimes())
+      //  api.getAllCrimes().flatMap(new F)
+        //        .onErrorResumeNext(throwable -> repositoryOfCrime.getCrimes())
+          repositoryOfCrime.getCrimes()
                 .subscribeOn(schedulersProvider.newThread())
                 .observeOn(schedulersProvider.ui())
                 .subscribe(callback::onSuccess);

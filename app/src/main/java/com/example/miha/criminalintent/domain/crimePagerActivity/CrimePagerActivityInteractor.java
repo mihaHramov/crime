@@ -5,6 +5,7 @@ import android.util.Log;
 import com.example.miha.criminalintent.data.repositories.repositoryOfCrime.IRepositoryOfCrime;
 import com.example.miha.criminalintent.domain.global.IFileTransfer;
 import com.example.miha.criminalintent.domain.model.Crime;
+import com.example.miha.criminalintent.domain.model.ItemCrime;
 import com.example.miha.criminalintent.presentation.ui.utils.ISchedulersProvider;
 
 import java.util.List;
@@ -32,9 +33,9 @@ public class CrimePagerActivityInteractor implements ICrimePagerActivityInteract
     }
 
     @Override
-    public Integer getCurrentPosition(List<Crime> crimes) {
+    public Integer getCurrentPosition(List<ItemCrime> crimes) {
         for (int i = 0; i < crimes.size(); i++) {
-            if (crimes.get(i).getId().equals(crime.getId())) {
+            if (crimes.get(i).getCrime().getId().equals(crime.getId())) {
                 return i;
             }
         }

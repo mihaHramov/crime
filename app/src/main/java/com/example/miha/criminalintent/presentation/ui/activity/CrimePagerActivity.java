@@ -10,6 +10,7 @@ import com.arellomobile.mvp.presenter.InjectPresenter;
 import com.arellomobile.mvp.presenter.ProvidePresenter;
 import com.example.miha.criminalintent.R;
 import com.example.miha.criminalintent.domain.model.Crime;
+import com.example.miha.criminalintent.domain.model.ItemCrime;
 import com.example.miha.criminalintent.presentation.mvp.crimePagerActivity.CrimePagerActivityPresenter;
 import com.example.miha.criminalintent.presentation.mvp.crimePagerActivity.CrimePagerActivityView;
 import com.example.miha.criminalintent.presentation.ui.ApplicationCrime;
@@ -57,7 +58,7 @@ public class CrimePagerActivity extends MvpAppCompatActivity implements CrimePag
     }
 
     @Override
-    public void showCrimes(List<Crime> crimes) {
+    public void showCrimes(List<ItemCrime> crimes) {
         adapter.setCrimeList(crimes);
     }
 }
