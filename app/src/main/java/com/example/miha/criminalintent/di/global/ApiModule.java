@@ -4,6 +4,8 @@ import com.example.miha.criminalintent.data.network.CrimeApi;
 import com.example.miha.criminalintent.data.network.user.FirebaseAuthEmail;
 import com.example.miha.criminalintent.data.network.user.UserApi;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
 
 import dagger.Module;
 import dagger.Provides;
@@ -25,5 +27,10 @@ public class ApiModule {
     @Provides
     UserApi provideUserApi(FirebaseAuth auth) {
         return new FirebaseAuthEmail(auth);
+    }
+
+    @Provides
+    StorageReference provideStorageReference() {
+        return FirebaseStorage.getInstance().getReference();
     }
 }

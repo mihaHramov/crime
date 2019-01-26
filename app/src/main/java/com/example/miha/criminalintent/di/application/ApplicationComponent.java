@@ -12,19 +12,24 @@ import com.example.miha.criminalintent.di.datePickerFragment.DatePickerModule;
 import com.example.miha.criminalintent.di.global.ApiModule;
 import com.example.miha.criminalintent.di.global.RepositoryModule;
 import com.example.miha.criminalintent.di.global.SchedulerModule;
+import com.example.miha.criminalintent.di.global.UtilModule;
 
 import dagger.Component;
 
 @Component(modules = {ContextModule.class,
         SchedulerModule.class,
         ApiModule.class,
-        RepositoryModule.class})
+        RepositoryModule.class, UtilModule.class})
 public interface ApplicationComponent {
     CrimeListFragmentComponnent getCrimeListFragmentComponnent();
 
     AuthComponent getAuthComponent();
+
     CrimeListActivityComponent getCrimeListActivityComponent();
+
     CrimeFragmentComponent getCrimeFragmentComponent(CrimeFragmentModule crimeFragmentModule);
+
     CrimePagerActivityComponent getPagerActivityComponent(CrimePagerActivityModule module);
+
     DatePickerComponent getDatePickerComponent(DatePickerModule module);
 }
