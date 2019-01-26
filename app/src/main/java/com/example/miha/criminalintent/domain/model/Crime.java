@@ -5,13 +5,23 @@ import java.util.List;
 
 public class Crime implements Serializable {
     private Integer id;
-
     private List<Comment> comments;
     private User suspect;
     private String photo;
     private String title;
     private String date;
     private String details;
+    private Boolean solved;
+    private User author;
+    private Boolean publick;
+
+    public Boolean getPublick() {
+        return publick;
+    }
+
+    public void setPublick(Boolean publick) {
+        this.publick = publick;
+    }
 
     public String getDetails() {
         return details;
@@ -20,10 +30,6 @@ public class Crime implements Serializable {
     public void setDetails(String details) {
         this.details = details;
     }
-
-    private Boolean solved;
-
-    private User author;
 
     public Integer getId() {
         return id;
