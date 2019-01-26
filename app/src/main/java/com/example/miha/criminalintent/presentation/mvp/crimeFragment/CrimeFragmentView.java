@@ -26,4 +26,6 @@ public interface CrimeFragmentView extends MvpView {
     void showIsEnabled(Boolean bool);
 
     void showDetails(String details);
+
+    void postCrime(Crime crime);
 }

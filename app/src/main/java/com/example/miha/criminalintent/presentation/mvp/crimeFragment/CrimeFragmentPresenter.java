@@ -3,6 +3,7 @@ package com.example.miha.criminalintent.presentation.mvp.crimeFragment;
 import com.arellomobile.mvp.InjectViewState;
 import com.arellomobile.mvp.MvpPresenter;
 import com.example.miha.criminalintent.domain.crimeFragment.ICrimeFragmentInteractor;
+import com.example.miha.criminalintent.presentation.ui.utils.ImageUrlConverter;
 
 @InjectViewState
 public class CrimeFragmentPresenter extends MvpPresenter<CrimeFragmentView> {
@@ -16,7 +17,8 @@ public class CrimeFragmentPresenter extends MvpPresenter<CrimeFragmentView> {
     public void init() {
         interactor.loadCrime(crime -> {
             if (!crime.getPhoto().isEmpty()) {
-                getViewState().showPhoto(crime.getPhoto());
+                String photo = ImageUrlConverter.getRealAddressFile(crime.getPhoto());
+                getViewState().showPhoto(photo);
             }
             if (crime.getSuspect().getId() > 0) {
                 getViewState().showSuspect(crime.getSuspect());
@@ -58,7 +60,7 @@ public class CrimeFragmentPresenter extends MvpPresenter<CrimeFragmentView> {
     }
 
     public void solved(Boolean isChecked) {
-        interactor.loadCrime(crime ->{
+        interactor.loadCrime(crime -> {
             crime.setSolved(isChecked);
             getViewState().sendUpdateUiMessage(crime);
         });
@@ -80,8 +82,10 @@ public class CrimeFragmentPresenter extends MvpPresenter<CrimeFragmentView> {
     }
 
     public void changeDetails(String string) {
-        interactor.loadCrime(crime -> {
-            crime.setDetails(string);
-        });
+        interactor.loadCrime(crime -> crime.setDetails(string));
+    }
+
+    public void sendCrime() {
+        interactor.loadCrime(crime -> getViewState().postCrime(crime));
     }
 }

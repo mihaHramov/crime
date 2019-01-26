@@ -27,6 +27,7 @@ import com.arellomobile.mvp.presenter.ProvidePresenter;
 import com.example.miha.criminalintent.R;
 import com.example.miha.criminalintent.domain.events.BusProvider;
 import com.example.miha.criminalintent.domain.events.OnChangeCrimeEvent;
+import com.example.miha.criminalintent.domain.events.OnSendCrimeToServer;
 import com.example.miha.criminalintent.domain.model.Crime;
 import com.example.miha.criminalintent.domain.model.User;
 import com.example.miha.criminalintent.presentation.mvp.crimeFragment.CrimeFragmentPresenter;
@@ -92,7 +93,7 @@ public class CrimeFragment extends MvpAppCompatFragment implements CrimeFragment
     public void showPhoto(String photo) {
         Picasso.get().load(photo)
                 .placeholder(R.drawable.ic_action_account_circle)
-                .error(android.R.drawable.stat_notify_error)
+                .error(R.drawable.ic_action_account_circle)
                 .into(mPhotoView);
         mPhotoView.setOnClickListener(v -> presenter.clickOnImage());
     }
@@ -222,8 +223,7 @@ public class CrimeFragment extends MvpAppCompatFragment implements CrimeFragment
         }
 
 
-        reportButton.setOnClickListener(v13 -> {
-        });
+        reportButton.setOnClickListener(v13 -> presenter.sendCrime());
 
 
         mSuspectButton.setOnClickListener(v14 -> {
@@ -243,7 +243,7 @@ public class CrimeFragment extends MvpAppCompatFragment implements CrimeFragment
             }
             if (mPhotoFile != null) {
                 takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, Uri.fromFile(mPhotoFile));
-                presenter.createPhoto("file://" + mPhotoFile.getAbsolutePath());
+                presenter.createPhoto(mPhotoFile.getAbsolutePath());
                 startActivityForResult(takePictureIntent, REQUEST_PHOTO);
             }
         }
@@ -263,6 +263,11 @@ public class CrimeFragment extends MvpAppCompatFragment implements CrimeFragment
         mDetails.removeTextChangedListener(detailsWatcher);
         mDetails.setText(details);
         mDetails.addTextChangedListener(detailsWatcher);
+    }
+
+    @Override
+    public void postCrime(Crime crime) {
+        BusProvider.getInstance().post(new OnSendCrimeToServer(crime));
     }
 
     private File createImageFile() throws IOException {
