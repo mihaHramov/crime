@@ -19,7 +19,7 @@ import java.util.Map;
 
 
 public class BdRepositoryOfCrime extends SQLiteOpenHelper {
-    private static final int DATABASE_VERSION = 3;
+    private static final int DATABASE_VERSION = 4;
     private static final String DATABASE_NAME = "CrimeDb";
 
     private static final String USER_TABLE = "users";
@@ -46,6 +46,7 @@ public class BdRepositoryOfCrime extends SQLiteOpenHelper {
     private static final String CRIME_SOLVED = "solved";
     private static final String CRIME_AUTHOR = "author";
     private static final String CRIME_SUSPECT = "suspect";
+    private static final String CRIME_PUBLIC = "public";
 
     public BdRepositoryOfCrime(Context context) {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
@@ -76,6 +77,7 @@ public class BdRepositoryOfCrime extends SQLiteOpenHelper {
         String crimeSolved = crimeAs + "_" + CRIME_SOLVED;
         String crimeId = crimeAs + "_" + CRIME_ID;
         String crimeDetails = crimeAs + "_" + CRIME_DETAILS;
+        String crimePublic = crimeAs + "_" + CRIME_PUBLIC;
 
         String select = "SELECT " +
                 authorAs + "." + USER_NAME + " AS " + authorName + " , " +
@@ -93,6 +95,7 @@ public class BdRepositoryOfCrime extends SQLiteOpenHelper {
                 crimeAs + "." + CRIME_PHOTO + " AS " + crimePhoto + " , " +
                 crimeAs + "." + CRIME_SOLVED + " AS " + crimeSolved + " , " +
                 crimeAs + "." + CRIME_DETAILS + " AS " + crimeDetails + " , " +
+                crimeAs + "." + CRIME_PUBLIC + " AS " + crimePublic + " , " +
                 crimeAs + "." + CRIME_ID + " AS " + crimeId;
 
         String from = " FROM " + CRIME_TABLE + " AS " + crimeAs +
@@ -119,11 +122,12 @@ public class BdRepositoryOfCrime extends SQLiteOpenHelper {
             Integer crimeisSolvedColl = cursor.getColumnIndex(crimeSolved);
             Integer crimeIdColl = cursor.getColumnIndex(crimeId);
             Integer crimeDetailsColl = cursor.getColumnIndex(crimeDetails);
+            Integer crimePubliclsColl = cursor.getColumnIndex(crimePublic);
             String temp = "";
             do {
                 User author = getUserFromCrime(cursor, authoeNameidCol, authorIdCol, authorPhotoCol, authorServerIdCol);
                 User suspect = getUserFromCrime(cursor, suspectNameidCol, suspectIdCol, suspectPhotoCol, suspectServerIdCol);
-                Crime crime = getCrime(cursor, titleIdCol, crimeDateCol, crimePhotoColl, crimeisSolvedColl, crimeIdColl, crimeDetailsColl);
+                Crime crime = getCrime(cursor, titleIdCol, crimeDateCol, crimePhotoColl, crimeisSolvedColl, crimeIdColl, crimeDetailsColl,crimePubliclsColl);
                 crime.setAuthor(author);
                 crime.setSuspect(suspect);
                 crime.setComments(new ArrayList<>());
@@ -200,12 +204,20 @@ public class BdRepositoryOfCrime extends SQLiteOpenHelper {
         return crimeList;
     }
 
-    private Crime getCrime(Cursor cursor, Integer titleIdCol, Integer crimeDateCol, Integer crimePhotoColl, Integer crimeisSolvedColl, Integer crimeIdColl, Integer crimeDetailsColl) {
+    private Crime getCrime(Cursor cursor,
+                           Integer titleIdCol,
+                           Integer crimeDateCol,
+                           Integer crimePhotoColl,
+                           Integer crimeisSolvedColl,
+                           Integer crimeIdColl,
+                           Integer crimeDetailsColl,
+                           Integer crimePubliclsColl) {
         Crime crime = new Crime();
         crime.setTitle(cursor.getString(titleIdCol));
         crime.setDate(cursor.getString(crimeDateCol));
         crime.setPhoto(cursor.getString(crimePhotoColl));
         crime.setSolved(cursor.getString(crimeisSolvedColl).equals("1"));
+        crime.setPublick(cursor.getString(crimePubliclsColl).equals("1"));
         crime.setId(cursor.getInt(crimeIdColl));
         crime.setDetails(cursor.getString(crimeDetailsColl));
         return crime;
@@ -260,6 +272,7 @@ public class BdRepositoryOfCrime extends SQLiteOpenHelper {
         String datetime = format.format(date);
         crime.setDate(datetime);
         crime.setSolved(false);
+        crime.setPublick(false);
         crime.setDetails(CRIME_DETAILS);
         crime.setComments(new ArrayList<>());
         ContentValues cv = new ContentValues();
@@ -297,6 +310,7 @@ public class BdRepositoryOfCrime extends SQLiteOpenHelper {
                 + CRIME_SUSPECT + " INTEGER,"
                 + CRIME_AUTHOR + " INTEGER,"
                 + CRIME_SOLVED + " BOOLEAN,"
+                + CRIME_PUBLIC + " BOOLEAN,"
                 + CRIME_DATE + " TEXT,"
                 + CRIME_DETAILS + " TEXT,"
                 + CRIME_PHOTO + " TEXT,"
