@@ -10,6 +10,7 @@ import com.example.miha.criminalintent.domain.model.User;
 import java.util.List;
 
 import rx.Observable;
+import rx.functions.Func1;
 
 public class RepositoryOfUser implements IRepositoryOfUser {
     private static final String MY_SETTINGS = "my_settings";
@@ -21,7 +22,7 @@ public class RepositoryOfUser implements IRepositoryOfUser {
     private BdRepositoryOfCrime localDb;
     private UserStorageApi api;
 
-    public RepositoryOfUser(Context context, BdRepositoryOfCrime localDb,UserStorageApi api) {
+    public RepositoryOfUser(Context context, BdRepositoryOfCrime localDb, UserStorageApi api) {
         sp = context.getSharedPreferences(MY_SETTINGS, Context.MODE_PRIVATE);
         this.localDb = localDb;
         this.api = api;
@@ -56,7 +57,10 @@ public class RepositoryOfUser implements IRepositoryOfUser {
 
     @Override
     public Observable<List<User>> getUsers() {
-       return api.getAllUser();
+        return api.getAllUser()
+                .flatMap((Func1<List<User>, Observable<User>>) Observable::from)
+                .flatMap((Func1<User, Observable<User>>) this::addUserIfNotExist)
+                .toList();
     }
 
     @Override
