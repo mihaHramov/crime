@@ -354,4 +354,24 @@ public class BdRepositoryOfCrime extends SQLiteOpenHelper {
         db.execSQL("DROP TABLE IF EXISTS " + USER_TABLE);
         onCreate(db);
     }
+
+    public User create(User user) {
+        SQLiteDatabase db = getWritableDatabase();
+        String query = "SELECT * FROM "+USER_TABLE+" WHERE " + USER_URL_ID + " = '" + user.getServerId()+"'";
+        Cursor cursor = db.rawQuery(query, null);
+        if(cursor.moveToFirst()){
+           Integer  id = cursor.getColumnIndex(USER_ID);
+           Integer idUser = cursor.getInt(id);
+           user.setId(idUser);
+        }else {
+            ContentValues cv = new ContentValues();
+            cv.put(USER_NAME,user.getName());
+            cv.put(USER_PHOTO,user.getPhoto());
+            cv.put(USER_URL_ID,user.getServerId());
+            user.setId((int) db.insert(USER_TABLE, null, cv));
+
+        }
+        db.close();
+        return user;
+    }
 }
