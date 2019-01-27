@@ -17,8 +17,8 @@ public class AuthModule {
     @Provides
     public IAuthUserInteractor getInteractor(IRepositoryOfUser repositoryOfUser,
                                              AuthUserApi auth,
-                                             ISchedulersProvider provider, UserStorageApi api) {
-        return new AuthUserInteractor(repositoryOfUser, auth, provider,api);
+                                             ISchedulersProvider provider) {
+        return new AuthUserInteractor(repositoryOfUser, auth, provider);
     }
 
     @Provides
