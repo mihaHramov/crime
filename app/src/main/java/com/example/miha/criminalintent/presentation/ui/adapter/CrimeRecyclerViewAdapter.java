@@ -52,7 +52,6 @@ public class CrimeRecyclerViewAdapter extends RecyclerView.Adapter<CrimeRecycler
     @Override
     public void onBindViewHolder(@NonNull ViewHolder viewHolder, int i) {
         viewHolder.bind(crimes.get(i));
-        crimes.get(i).setPosition(i);
         viewHolder.itemView.setOnLongClickListener(view -> {
             itemLongClickListener.click(crimes.get(viewHolder.getAdapterPosition()).getCrime(), view);
             return false;
