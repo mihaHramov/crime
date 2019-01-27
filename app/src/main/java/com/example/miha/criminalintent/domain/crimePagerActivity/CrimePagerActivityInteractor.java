@@ -1,27 +1,30 @@
 package com.example.miha.criminalintent.domain.crimePagerActivity;
 
-import android.util.Log;
-
+import com.example.miha.criminalintent.data.network.crime.ICrimeApi;
 import com.example.miha.criminalintent.data.repositories.repositoryOfCrime.IRepositoryOfCrime;
 import com.example.miha.criminalintent.domain.global.IFileTransfer;
 import com.example.miha.criminalintent.domain.model.Crime;
 import com.example.miha.criminalintent.domain.model.ItemCrime;
 import com.example.miha.criminalintent.presentation.ui.utils.ISchedulersProvider;
+import com.example.miha.criminalintent.presentation.ui.utils.ImageUrlConverter;
 
 import java.util.List;
 
+import rx.Observable;
 
 public class CrimePagerActivityInteractor implements ICrimePagerActivityInteractor {
     private final ISchedulersProvider schedulers;
     private Crime crime;
     private IRepositoryOfCrime repositoryOfCrime;
     private IFileTransfer fileTransfer;
+    private ICrimeApi api;
 
-    public CrimePagerActivityInteractor(Crime crime, IRepositoryOfCrime repositoryOfCrime, ISchedulersProvider provider,IFileTransfer transfer) {
+    public CrimePagerActivityInteractor(Crime crime, IRepositoryOfCrime repositoryOfCrime, ISchedulersProvider provider, IFileTransfer transfer, ICrimeApi iCrimeApi) {
         this.crime = crime;
         this.repositoryOfCrime = repositoryOfCrime;
         this.schedulers = provider;
         this.fileTransfer = transfer;
+        this.api = iCrimeApi;
     }
 
     @Override
@@ -42,12 +45,25 @@ public class CrimePagerActivityInteractor implements ICrimePagerActivityInteract
         return 0;
     }
 
+    private Observable<String> sendFile(Crime crime) {
+        return fileTransfer.sendFileToServer(crime.getPhoto());
+    }
+
+    private Boolean isSendFile(Crime crime) {
+        return !(crime.getPhoto().isEmpty() || ImageUrlConverter.isUrl(crime.getPhoto()));
+    }
+
     @Override
-    public void sendCrime(Crime crime,OnSendComplete complete,OnSendFailure failure) {
-        fileTransfer.sendFileToServer(crime.getPhoto())
+    public void sendCrime(Crime crime, OnSendComplete complete, OnSendFailure failure) {
+        Observable<String> pathOfPhotoCrime = isSendFile(crime) ? sendFile(crime) : Observable.just(crime.getPhoto());
+        pathOfPhotoCrime
+                .doOnError(string -> failure.call(string.getMessage()))
+                .onErrorReturn(throwable -> "")
+                .map(s -> {
+                    crime.setPhoto(s);
+                    return crime;
+                })
                 .subscribeOn(schedulers.newThread())
-                .observeOn(schedulers.ui())
-                .doOnNext(str-> Log.d("mihaHramov","url = "+str))
-                .subscribe(complete::call, error->failure.call(error.getMessage()));
+                .observeOn(schedulers.ui());
     }
 }

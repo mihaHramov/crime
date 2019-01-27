@@ -10,7 +10,7 @@ import com.google.firebase.auth.FirebaseUser;
 import rx.Observable;
 import rx.Single;
 
-public class FirebaseAuthEmail implements UserApi {
+public class FirebaseAuthEmail implements AuthUserApi {
     private FirebaseAuth mAuth;
 
     public FirebaseAuthEmail(FirebaseAuth mAuth) {

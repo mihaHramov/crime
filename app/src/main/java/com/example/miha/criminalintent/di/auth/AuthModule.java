@@ -1,6 +1,7 @@
 package com.example.miha.criminalintent.di.auth;
 
-import com.example.miha.criminalintent.data.network.user.UserApi;
+import com.example.miha.criminalintent.data.network.user.AuthUserApi;
+import com.example.miha.criminalintent.data.network.user.UserStorageApi;
 import com.example.miha.criminalintent.data.repositories.repositoryOfUser.IRepositoryOfUser;
 import com.example.miha.criminalintent.domain.authUserFragment.AuthUserInteractor;
 import com.example.miha.criminalintent.domain.authUserFragment.IAuthUserInteractor;
@@ -15,9 +16,9 @@ public class AuthModule {
 
     @Provides
     public IAuthUserInteractor getInteractor(IRepositoryOfUser repositoryOfUser,
-                                             UserApi auth,
-                                             ISchedulersProvider provider) {
-        return new AuthUserInteractor(repositoryOfUser, auth, provider);
+                                             AuthUserApi auth,
+                                             ISchedulersProvider provider, UserStorageApi api) {
+        return new AuthUserInteractor(repositoryOfUser, auth, provider,api);
     }
 
     @Provides
