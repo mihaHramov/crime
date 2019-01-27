@@ -3,20 +3,23 @@ package com.example.miha.criminalintent.data.repositories.repositoryOfUser;
 import android.content.Context;
 import android.content.SharedPreferences;
 
+import com.example.miha.criminalintent.data.repositories.repositoryOfCrime.BdRepositoryOfCrime;
 import com.example.miha.criminalintent.domain.model.User;
 
 import rx.Observable;
 
 public class RepositoryOfUser implements IRepositoryOfUser {
     private static final String MY_SETTINGS = "my_settings";
-    private static final String USER_NAME = "userName";
-    private static final String USER_PHOTO = "userPhoto";
+    private static final String USER_NAME = "user_name";
+    private static final String USER_PHOTO = "user_photo";
     private static final String USER_ID = "id";
-    private static final String USER_SERVER_ID = "id";
+    private static final String USER_SERVER_ID = "id_server";
     private SharedPreferences sp;
+    private BdRepositoryOfCrime localDb;
 
-    public RepositoryOfUser(Context context) {
+    public RepositoryOfUser(Context context,BdRepositoryOfCrime localDb) {
         sp = context.getSharedPreferences(MY_SETTINGS, Context.MODE_PRIVATE);
+        this.localDb = localDb;
     }
 
     @Override
@@ -39,5 +42,10 @@ public class RepositoryOfUser implements IRepositoryOfUser {
         ed.putString(USER_SERVER_ID, user.getServerId());
         ed.putString(USER_PHOTO, user.getPhoto());
         ed.apply();
+    }
+
+    @Override
+    public Observable<User> addUserIfNotExist(User user) {
+       return Observable.fromCallable(() -> localDb.create(user));
     }
 }
