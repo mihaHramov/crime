@@ -13,6 +13,7 @@ import com.example.miha.criminalintent.di.global.ApiModule;
 import com.example.miha.criminalintent.di.global.RepositoryModule;
 import com.example.miha.criminalintent.di.global.SchedulerModule;
 import com.example.miha.criminalintent.di.global.UtilModule;
+import com.example.miha.criminalintent.di.userListActivity.UserListActivityComponent;
 
 import dagger.Component;
 
@@ -32,4 +33,6 @@ public interface ApplicationComponent {
     CrimePagerActivityComponent getPagerActivityComponent(CrimePagerActivityModule module);
 
     DatePickerComponent getDatePickerComponent(DatePickerModule module);
+
+    UserListActivityComponent getUserListComponent();
 }

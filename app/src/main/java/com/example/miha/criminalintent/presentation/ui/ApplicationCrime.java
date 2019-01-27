@@ -12,6 +12,7 @@ import com.example.miha.criminalintent.di.crimePagerActivity.CrimePagerActivityC
 import com.example.miha.criminalintent.di.crimePagerActivity.CrimePagerActivityModule;
 import com.example.miha.criminalintent.di.datePickerFragment.DatePickerComponent;
 import com.example.miha.criminalintent.di.datePickerFragment.DatePickerModule;
+import com.example.miha.criminalintent.di.userListActivity.UserListActivityComponent;
 import com.example.miha.criminalintent.domain.model.Crime;
 
 public class ApplicationCrime extends android.app.Application {
@@ -51,5 +52,9 @@ public class ApplicationCrime extends android.app.Application {
 
     public static CrimePagerActivityComponent getCrimePagerActivityComponent(Crime crime) {
         return component.getPagerActivityComponent(new CrimePagerActivityModule(crime));
+    }
+
+    public static UserListActivityComponent getUserListActivityComponent(){
+        return component.getUserListComponent();
     }
 }
