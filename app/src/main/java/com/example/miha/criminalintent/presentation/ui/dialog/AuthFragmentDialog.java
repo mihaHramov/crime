@@ -6,8 +6,10 @@ import android.support.annotation.Nullable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
+import android.widget.ProgressBar;
 import android.widget.Toast;
 
 import com.arellomobile.mvp.MvpAppCompatDialogFragment;
@@ -32,6 +34,9 @@ public class AuthFragmentDialog extends MvpAppCompatDialogFragment implements IA
         return ApplicationCrime.getAuthComponent().getPresenter();
     }
 
+    @BindView(R.id.progress)
+    ProgressBar mProgress;
+
     @BindView(R.id.password)
     EditText mPassword;
 
@@ -42,19 +47,22 @@ public class AuthFragmentDialog extends MvpAppCompatDialogFragment implements IA
     CheckBox isNewUser;
 
     @OnClick(R.id.auth)
-    public void authUser(){
-        presenter.auth(getString(mEmail),getString(mPassword),isNewUser.isChecked());
+    public void authUser() {
+        presenter.auth(getString(mEmail), getString(mPassword), isNewUser.isChecked());
     }
+
+    @BindView(R.id.auth)
+    Button mAuth;
 
     @Override
     public void showUser(User user) {
-        Toast.makeText(getActivity(),"Здравствуйте "+user.getName(),Toast.LENGTH_LONG).show();
+        Toast.makeText(getActivity(), "Здравствуйте " + user.getName(), Toast.LENGTH_LONG).show();
         dismiss();
     }
 
     @Override
     public void showError(String error) {
-        Toast.makeText(getActivity(),error,Toast.LENGTH_LONG).show();
+        Toast.makeText(getActivity(), error, Toast.LENGTH_LONG).show();
     }
 
     @Nullable
@@ -64,8 +72,17 @@ public class AuthFragmentDialog extends MvpAppCompatDialogFragment implements IA
         ButterKnife.bind(this, v);
         return v;
     }
-    private String getString (EditText editText){
+
+    private String getString(EditText editText) {
         return editText.getText().toString();
     }
 
+    @Override
+    public void disableView(Boolean b) {
+        isNewUser.setEnabled(b);
+        mPassword.setEnabled(b);
+        mEmail.setEnabled(b);
+        mAuth.setEnabled(b);
+        mProgress.setVisibility(b?View.GONE:View.VISIBLE);
+    }
 }

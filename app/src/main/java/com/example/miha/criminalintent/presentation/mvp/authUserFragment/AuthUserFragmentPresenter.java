@@ -11,11 +11,13 @@ public class AuthUserFragmentPresenter extends MvpPresenter<IAuthUserFragmentVie
     private IAuthUserInteractor.Callback callback = new IAuthUserInteractor.Callback() {
         @Override
         public void onSuccess(User user) {
+            getViewState().disableView(true);
             getViewState().showUser(user);
         }
 
         @Override
         public void onError(String ex) {
+            getViewState().disableView(true);
             getViewState().showError(ex);
         }
     };
@@ -26,6 +28,7 @@ public class AuthUserFragmentPresenter extends MvpPresenter<IAuthUserFragmentVie
     }
 
     public void auth(String email, String password, Boolean register){
+        getViewState().disableView(false);
         if(register){
             interactor.registerUser(email, password,callback);
         }else {

@@ -5,5 +5,8 @@ import com.example.miha.criminalintent.domain.model.User;
 
 public interface IAuthUserFragmentView extends MvpView {
     void showUser(User user);
+
     void showError(String error);
+
+    void disableView(Boolean b);
 }
