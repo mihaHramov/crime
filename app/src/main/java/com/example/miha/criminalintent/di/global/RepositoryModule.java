@@ -2,6 +2,7 @@ package com.example.miha.criminalintent.di.global;
 
 import android.content.Context;
 
+import com.example.miha.criminalintent.data.network.user.UserStorageApi;
 import com.example.miha.criminalintent.data.repositories.repositoryOfCrime.BdRepositoryOfCrime;
 import com.example.miha.criminalintent.data.repositories.repositoryOfCrime.IRepositoryOfCrime;
 import com.example.miha.criminalintent.data.repositories.repositoryOfCrime.RepositoryOfCrime;
@@ -23,8 +24,8 @@ public class RepositoryModule {
         return new BdRepositoryOfCrime(context);
     }
     @Provides
-    IRepositoryOfUser provideRepositoryOfUser(Context context,BdRepositoryOfCrime db) {
-        return new RepositoryOfUser(context,db);
+    IRepositoryOfUser provideRepositoryOfUser(Context context, BdRepositoryOfCrime db, UserStorageApi api) {
+        return new RepositoryOfUser(context,db,api);
     }
 
 
