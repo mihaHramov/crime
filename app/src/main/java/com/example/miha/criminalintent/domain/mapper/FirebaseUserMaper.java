@@ -10,6 +10,9 @@ public class FirebaseUserMaper implements Func1<FirebaseUser, User> {
     public User call(FirebaseUser firebaseUser) {
         User user = new User();
         user.setName(firebaseUser.getEmail());
+        user.setServerId(firebaseUser.getUid());
+        user.setId(0);
+        user.setPhoto("");
         return user;
     }
 }
