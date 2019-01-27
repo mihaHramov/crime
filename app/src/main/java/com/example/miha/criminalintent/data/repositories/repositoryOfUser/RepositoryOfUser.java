@@ -3,8 +3,11 @@ package com.example.miha.criminalintent.data.repositories.repositoryOfUser;
 import android.content.Context;
 import android.content.SharedPreferences;
 
+import com.example.miha.criminalintent.data.network.user.UserStorageApi;
 import com.example.miha.criminalintent.data.repositories.repositoryOfCrime.BdRepositoryOfCrime;
 import com.example.miha.criminalintent.domain.model.User;
+
+import java.util.List;
 
 import rx.Observable;
 
@@ -16,10 +19,12 @@ public class RepositoryOfUser implements IRepositoryOfUser {
     private static final String USER_SERVER_ID = "id_server";
     private SharedPreferences sp;
     private BdRepositoryOfCrime localDb;
+    private UserStorageApi api;
 
-    public RepositoryOfUser(Context context,BdRepositoryOfCrime localDb) {
+    public RepositoryOfUser(Context context, BdRepositoryOfCrime localDb,UserStorageApi api) {
         sp = context.getSharedPreferences(MY_SETTINGS, Context.MODE_PRIVATE);
         this.localDb = localDb;
+        this.api = api;
     }
 
     @Override
@@ -46,6 +51,16 @@ public class RepositoryOfUser implements IRepositoryOfUser {
 
     @Override
     public Observable<User> addUserIfNotExist(User user) {
-       return Observable.fromCallable(() -> localDb.create(user));
+        return Observable.fromCallable(() -> localDb.create(user));
+    }
+
+    @Override
+    public Observable<List<User>> getUsers() {
+       return api.getAllUser();
+    }
+
+    @Override
+    public Observable<User> createUser(User user) {
+        return api.createUser(user);
     }
 }
