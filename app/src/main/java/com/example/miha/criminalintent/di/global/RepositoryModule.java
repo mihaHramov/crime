@@ -23,8 +23,8 @@ public class RepositoryModule {
         return new BdRepositoryOfCrime(context);
     }
     @Provides
-    IRepositoryOfUser provideRepositoryOfUser(Context context) {
-        return new RepositoryOfUser(context);
+    IRepositoryOfUser provideRepositoryOfUser(Context context,BdRepositoryOfCrime db) {
+        return new RepositoryOfUser(context,db);
     }
 
 
