@@ -1,6 +1,5 @@
 package com.example.miha.criminalintent.presentation.mvp.crimePagerActivity;
 
-import android.util.Log;
 
 import com.arellomobile.mvp.InjectViewState;
 import com.arellomobile.mvp.MvpPresenter;
@@ -24,8 +23,8 @@ public class CrimePagerActivityPresenter extends MvpPresenter<CrimePagerActivity
 
     public void sentCrime(Crime crime) {
         interactor.sendCrime(crime,
-                string -> Log.d("mihaHramov",string),
-                string -> Log.d("mihaHramov", "send error " + string)
+                string -> getViewState().showResultOfSendCrime(string),
+                string -> getViewState().showResultOfSendCrime(string)
         );
     }
 }
