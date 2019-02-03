@@ -28,4 +28,6 @@ public interface CrimeFragmentView extends MvpView {
     void showDetails(String details);
 
     void postCrime(Crime crime);
+
+    void choiceSuspect();
 }

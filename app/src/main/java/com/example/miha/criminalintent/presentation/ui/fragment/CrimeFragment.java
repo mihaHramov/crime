@@ -33,6 +33,7 @@ import com.example.miha.criminalintent.domain.model.User;
 import com.example.miha.criminalintent.presentation.mvp.crimeFragment.CrimeFragmentPresenter;
 import com.example.miha.criminalintent.presentation.mvp.crimeFragment.CrimeFragmentView;
 import com.example.miha.criminalintent.presentation.ui.ApplicationCrime;
+import com.example.miha.criminalintent.presentation.ui.activity.UserListActivity;
 import com.example.miha.criminalintent.presentation.ui.dialog.DatePickerFragment;
 import com.example.miha.criminalintent.presentation.ui.dialog.ImageFragment;
 import com.squareup.picasso.Picasso;
@@ -226,9 +227,14 @@ public class CrimeFragment extends MvpAppCompatFragment implements CrimeFragment
         reportButton.setOnClickListener(v13 -> presenter.sendCrime());
 
 
-        mSuspectButton.setOnClickListener(v14 -> {
-        });
+        mSuspectButton.setOnClickListener(v14 -> presenter.setSuspectCrime());
         return v;
+    }
+
+    @Override
+    public void choiceSuspect() {
+        Intent i = new Intent(getActivity(),UserListActivity.class);
+        startActivity(i);
     }
 
     @Override

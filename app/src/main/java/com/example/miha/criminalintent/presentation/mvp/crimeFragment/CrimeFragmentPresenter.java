@@ -88,4 +88,8 @@ public class CrimeFragmentPresenter extends MvpPresenter<CrimeFragmentView> {
     public void sendCrime() {
         interactor.loadCrime(crime -> getViewState().postCrime(crime));
     }
+
+    public void setSuspectCrime() {
+        getViewState().choiceSuspect();
+    }
 }
