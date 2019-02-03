@@ -32,7 +32,9 @@ public class UserRecyclerViewAdapter extends RecyclerView.Adapter<UserRecyclerVi
     public void onBindViewHolder(@NonNull ViewHolder viewHolder, int i) {
         User user = users.get(i);
         if (!user.getPhoto().isEmpty()) {
-            Picasso.get().load(user.getPhoto()).into(viewHolder.imageView);
+            Picasso.get().load(user.getPhoto()).placeholder(R.drawable.ic_action_account_circle).into(viewHolder.imageView);
+        } else {
+            Picasso.get().load(R.drawable.ic_action_account_circle).into(viewHolder.imageView);
         }
         viewHolder.name.setText(user.getName());
     }
