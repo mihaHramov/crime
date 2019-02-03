@@ -16,14 +16,17 @@ public class UserListActivityPresenter extends MvpPresenter<UserListActivityView
     }
 
     public void init() {
+        getViewState().showLoading(true);
         interactor.loadUsers(new IUserListActivityInteractor.OnLoadingListener() {
             @Override
             public void success(List<User> users) {
+                getViewState().showLoading(false);
                 getViewState().showUsers(users);
             }
 
             @Override
             public void onError(String message) {
+                getViewState().showLoading(false);
                 getViewState().showError(message);
             }
         });

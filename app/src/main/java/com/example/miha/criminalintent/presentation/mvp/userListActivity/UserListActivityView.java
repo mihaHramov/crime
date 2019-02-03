@@ -7,5 +7,6 @@ import java.util.List;
 
 public interface UserListActivityView extends MvpView {
     void showUsers(List<User> users);
-    void showError(String errorMessage);
+    void showError(String error);
+    void showLoading(Boolean isShow);
 }
