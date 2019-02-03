@@ -33,4 +33,5 @@
     <string name="cancel">@android:string/cancel</string>
     <string name="file_error">error create file</string>
     <string name="crime_details_hint">Enter details of the crime</string>
+    <string name="title_activity_user_list">UserListActivity</string>
 </resources>
