@@ -1,6 +1,7 @@
 package com.example.miha.criminalintent.presentation.ui.fragment;
 
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.LinearLayoutManager;
@@ -27,8 +28,11 @@ import javax.inject.Inject;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
+import static android.app.Activity.RESULT_OK;
+
 
 public class UserListFragment extends MvpAppCompatFragment implements UserListActivityView {
+    public static final String SUSPECT_USER = UserListFragment.class.getName();
     @BindView(R.id.user_list)
     RecyclerView recyclerView;
     @BindView(R.id.progress)
@@ -53,6 +57,7 @@ public class UserListFragment extends MvpAppCompatFragment implements UserListAc
         ButterKnife.bind(this, v);
         ApplicationCrime.getUserListActivityComponent().inject(this);
         recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
+        adapter.setItemClickListener(user -> presenter.choiceItem(user));
         recyclerView.setAdapter(adapter);
         return v;
     }
@@ -70,5 +75,13 @@ public class UserListFragment extends MvpAppCompatFragment implements UserListAc
     @Override
     public void showLoading(Boolean isShow) {
         progressBar.setVisibility(isShow ? View.VISIBLE : View.GONE);
+    }
+
+    @Override
+    public void postChoiceUser(User user) {
+        Intent intent = new Intent();
+        intent.putExtra(SUSPECT_USER, user);
+        getActivity().setResult(RESULT_OK, intent);
+        getActivity().finish();
     }
 }
