@@ -20,11 +20,24 @@ import butterknife.ButterKnife;
 
 public class UserRecyclerViewAdapter extends RecyclerView.Adapter<UserRecyclerViewAdapter.ViewHolder> {
     private List<User> users = new ArrayList<>();
+    private OnChoiceUserListener itemClickListener;
+
+    public interface OnChoiceUserListener {
+        void itemClick(User user);
+    }
+
+    public void setItemClickListener(OnChoiceUserListener itemClickListener) {
+        this.itemClickListener = itemClickListener;
+    }
 
     @NonNull
     @Override
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup viewGroup, int i) {
         View v = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.user_item, viewGroup, false);
+        v.setOnClickListener(view -> {
+            User user = users.get(i);
+            itemClickListener.itemClick(user);
+        });
         return new ViewHolder(v);
     }
 
