@@ -34,10 +34,6 @@ public class UserRecyclerViewAdapter extends RecyclerView.Adapter<UserRecyclerVi
     @Override
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup viewGroup, int i) {
         View v = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.user_item, viewGroup, false);
-        v.setOnClickListener(view -> {
-            User user = users.get(i);
-            itemClickListener.itemClick(user);
-        });
         return new ViewHolder(v);
     }
 
@@ -50,6 +46,10 @@ public class UserRecyclerViewAdapter extends RecyclerView.Adapter<UserRecyclerVi
             Picasso.get().load(R.drawable.ic_action_account_circle).into(viewHolder.imageView);
         }
         viewHolder.name.setText(user.getName());
+        viewHolder.itemView.setOnClickListener(view -> {
+            User current_user = users.get(viewHolder.getAdapterPosition());
+            itemClickListener.itemClick(current_user);
+        });
     }
 
     public void setUsers(List<User> users) {
