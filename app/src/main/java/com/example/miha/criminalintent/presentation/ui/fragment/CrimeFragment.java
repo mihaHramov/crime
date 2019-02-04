@@ -53,6 +53,7 @@ public class CrimeFragment extends MvpAppCompatFragment implements CrimeFragment
     private FragmentManager fm;
     private static final int REQUEST_PHOTO = 1;
     private static final int REQUEST_DATE = 2;
+    private static final int REQUEST_SUSPECT = 3;
     private static final String DIALOG_IMAGE = "image";
     private PackageManager pm;
 
@@ -234,7 +235,7 @@ public class CrimeFragment extends MvpAppCompatFragment implements CrimeFragment
     @Override
     public void choiceSuspect() {
         Intent i = new Intent(getActivity(),UserListActivity.class);
-        startActivity(i);
+        startActivityForResult(i,REQUEST_SUSPECT);
     }
 
     @Override
@@ -286,12 +287,17 @@ public class CrimeFragment extends MvpAppCompatFragment implements CrimeFragment
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (resultCode != Activity.RESULT_OK) return;
+        //проверяяем от куда пришел ответ
         if (requestCode == REQUEST_PHOTO) {
             presenter.changePhoto();
         }
-        if (requestCode == REQUEST_DATE) {//проверяяем с какого фрагмента пришел ответ
+        if (requestCode == REQUEST_DATE) {
             String date = data.getStringExtra(DatePickerFragment.EXTRA_DATE);
             presenter.changeData(date);
+        }
+        if(requestCode == REQUEST_SUSPECT){
+            User user = (User) data.getSerializableExtra(UserListFragment.SUSPECT_USER);
+            presenter.setSuspectUser(user);
         }
     }
 }

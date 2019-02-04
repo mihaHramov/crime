@@ -3,6 +3,7 @@ package com.example.miha.criminalintent.presentation.mvp.crimeFragment;
 import com.arellomobile.mvp.InjectViewState;
 import com.arellomobile.mvp.MvpPresenter;
 import com.example.miha.criminalintent.domain.crimeFragment.ICrimeFragmentInteractor;
+import com.example.miha.criminalintent.domain.model.User;
 import com.example.miha.criminalintent.presentation.ui.utils.ImageUrlConverter;
 
 @InjectViewState
@@ -91,5 +92,12 @@ public class CrimeFragmentPresenter extends MvpPresenter<CrimeFragmentView> {
 
     public void setSuspectCrime() {
         getViewState().choiceSuspect();
+    }
+
+    public void setSuspectUser(User user) {
+        interactor.loadCrime(crime -> {
+            crime.setSuspect(user);
+            getViewState().showSuspect(user);
+        });
     }
 }
