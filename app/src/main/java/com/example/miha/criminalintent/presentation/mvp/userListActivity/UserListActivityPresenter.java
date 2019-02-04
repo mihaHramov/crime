@@ -31,4 +31,8 @@ public class UserListActivityPresenter extends MvpPresenter<UserListActivityView
             }
         });
     }
+
+    public void choiceItem(User user) {
+        getViewState().postChoiceUser(user);
+    }
 }
