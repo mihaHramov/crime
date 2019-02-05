@@ -22,7 +22,7 @@ public class FirebaseFileTransfer implements IFileTransfer {
 
         return Single.create((Single.OnSubscribe<String>) singleSubscriber -> {
             Uri file = Uri.fromFile(new File(photo));
-            StorageReference riversRef = mStorageRef.child("images/rivers1.jpg");
+            StorageReference riversRef = mStorageRef.child("images"+photo);
             UploadTask putFile = riversRef.putFile(file);
             putFile.addOnSuccessListener(taskSnapshot -> riversRef.getDownloadUrl().addOnSuccessListener(uri -> singleSubscriber.onSuccess(uri.toString())));
             putFile.addOnFailureListener(e -> singleSubscriber.onError(new Throwable(e.getMessage())));
