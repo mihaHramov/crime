@@ -4,7 +4,6 @@ import com.example.miha.criminalintent.data.network.crime.ICrimeApi;
 import com.example.miha.criminalintent.data.repositories.repositoryOfCrime.IRepositoryOfCrime;
 import com.example.miha.criminalintent.domain.crimePagerActivity.CrimePagerActivityInteractor;
 import com.example.miha.criminalintent.domain.crimePagerActivity.ICrimePagerActivityInteractor;
-import com.example.miha.criminalintent.domain.global.IFileTransfer;
 import com.example.miha.criminalintent.domain.model.Crime;
 import com.example.miha.criminalintent.presentation.mvp.crimePagerActivity.CrimePagerActivityPresenter;
 import com.example.miha.criminalintent.presentation.ui.utils.ISchedulersProvider;
@@ -21,8 +20,8 @@ public class CrimePagerActivityModule {
     }
 
     @Provides
-    public ICrimePagerActivityInteractor interactor(IRepositoryOfCrime repositoryOfCrime, ISchedulersProvider provider, IFileTransfer transfer, ICrimeApi api){
-        return new CrimePagerActivityInteractor(crime,repositoryOfCrime,provider,transfer,api);
+    public ICrimePagerActivityInteractor interactor(IRepositoryOfCrime repositoryOfCrime, ISchedulersProvider provider, ICrimeApi api){
+        return new CrimePagerActivityInteractor(crime,repositoryOfCrime,provider,api);
     }
 
     @Provides

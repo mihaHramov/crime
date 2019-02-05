@@ -1,6 +1,6 @@
 package com.example.miha.criminalintent.di.crimeListFragment;
 
-import com.example.miha.criminalintent.data.network.CrimeApi;
+import com.example.miha.criminalintent.data.network.crime.ICrimeApi;
 import com.example.miha.criminalintent.data.repositories.repositoryOfCrime.IRepositoryOfCrime;
 import com.example.miha.criminalintent.domain.crimeListFragment.CrimeListFragmentInteractor;
 import com.example.miha.criminalintent.domain.crimeListFragment.ICrimeListFragmentInteractor;
@@ -14,7 +14,7 @@ import dagger.Provides;
 public class CrimeListFragmentModule {
 
     @Provides
-    ICrimeListFragmentInteractor provideCrimeListFragmentInteractor(ISchedulersProvider schedulersProvider, CrimeApi crimeApi, IRepositoryOfCrime repositoryOfCrime) {
+    ICrimeListFragmentInteractor provideCrimeListFragmentInteractor(ISchedulersProvider schedulersProvider, ICrimeApi crimeApi, IRepositoryOfCrime repositoryOfCrime) {
         return new CrimeListFragmentInteractor(schedulersProvider, crimeApi, repositoryOfCrime);
     }
     @Provides
