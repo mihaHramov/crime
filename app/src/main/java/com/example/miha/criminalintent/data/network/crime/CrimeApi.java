@@ -42,7 +42,8 @@ public class CrimeApi implements ICrimeApi {
                             crime1.setPhoto(s);
                             return crime1;
                         })
-                .flatMap(this::putCrime);
+              //  .flatMap(this::putCrime)
+        ;
     }
 
     private Observable<Crime> putCrime(Crime crime) {

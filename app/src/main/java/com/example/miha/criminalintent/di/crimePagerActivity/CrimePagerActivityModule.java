@@ -2,6 +2,7 @@ package com.example.miha.criminalintent.di.crimePagerActivity;
 
 import com.example.miha.criminalintent.data.network.crime.ICrimeApi;
 import com.example.miha.criminalintent.data.repositories.repositoryOfCrime.IRepositoryOfCrime;
+import com.example.miha.criminalintent.data.repositories.repositoryOfUser.IRepositoryOfUser;
 import com.example.miha.criminalintent.domain.crimePagerActivity.CrimePagerActivityInteractor;
 import com.example.miha.criminalintent.domain.crimePagerActivity.ICrimePagerActivityInteractor;
 import com.example.miha.criminalintent.domain.model.Crime;
@@ -20,8 +21,8 @@ public class CrimePagerActivityModule {
     }
 
     @Provides
-    public ICrimePagerActivityInteractor interactor(IRepositoryOfCrime repositoryOfCrime, ISchedulersProvider provider, ICrimeApi api){
-        return new CrimePagerActivityInteractor(crime,repositoryOfCrime,provider,api);
+    public ICrimePagerActivityInteractor interactor(IRepositoryOfCrime repositoryOfCrime, ISchedulersProvider provider, ICrimeApi api,IRepositoryOfUser repositoryOfUser){
+        return new CrimePagerActivityInteractor(crime,repositoryOfCrime,provider,api,repositoryOfUser);
     }
 
     @Provides

@@ -2,24 +2,31 @@ package com.example.miha.criminalintent.domain.crimePagerActivity;
 
 import com.example.miha.criminalintent.data.network.crime.ICrimeApi;
 import com.example.miha.criminalintent.data.repositories.repositoryOfCrime.IRepositoryOfCrime;
+import com.example.miha.criminalintent.data.repositories.repositoryOfUser.IRepositoryOfUser;
 import com.example.miha.criminalintent.domain.model.Crime;
 import com.example.miha.criminalintent.domain.model.ItemCrime;
+import com.example.miha.criminalintent.domain.model.User;
 import com.example.miha.criminalintent.presentation.ui.utils.ISchedulersProvider;
 
 import java.util.List;
+
+import rx.Observable;
+import rx.functions.Func1;
 
 
 public class CrimePagerActivityInteractor implements ICrimePagerActivityInteractor {
     private final ISchedulersProvider schedulers;
     private Crime crime;
     private IRepositoryOfCrime repositoryOfCrime;
+    private IRepositoryOfUser repositoryOfUser;
     private ICrimeApi api;
 
-    public CrimePagerActivityInteractor(Crime crime, IRepositoryOfCrime repositoryOfCrime, ISchedulersProvider provider, ICrimeApi iCrimeApi) {
+    public CrimePagerActivityInteractor(Crime crime, IRepositoryOfCrime repositoryOfCrime, ISchedulersProvider provider, ICrimeApi iCrimeApi, IRepositoryOfUser repositoryOfUser) {
         this.crime = crime;
         this.repositoryOfCrime = repositoryOfCrime;
         this.schedulers = provider;
         this.api = iCrimeApi;
+        this.repositoryOfUser = repositoryOfUser;
     }
 
     @Override
@@ -41,13 +48,16 @@ public class CrimePagerActivityInteractor implements ICrimePagerActivityInteract
     }
 
 
-
     @Override
     public void sendCrime(Crime crime, OnSendComplete complete, OnSendFailure failure) {
-        api.shareCrime(crime)
-                .doOnError(throwable -> failure.call(throwable.getMessage()))
+        repositoryOfUser.getCurrentUser()
+                .flatMap((Func1<User, Observable<Crime>>) user -> user.getId() > 0 ? api.shareCrime(crime) : Observable.error(new Throwable("please auth")))
                 .subscribeOn(schedulers.newThread())
                 .observeOn(schedulers.ui())
-                .subscribe(crime1 -> complete.call(crime1.getPhoto()));
+                .subscribe(
+                        crime1 -> complete.call(crime1.getPhoto()),
+                        throwable -> failure.call(throwable.getMessage())
+                );
+
     }
 }
