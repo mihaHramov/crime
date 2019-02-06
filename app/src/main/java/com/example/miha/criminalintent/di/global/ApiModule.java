@@ -21,8 +21,8 @@ public class ApiModule {
 
 
     @Provides
-    ICrimeApi povideICrimeApi(IFileTransfer transfer) {
-        return new CrimeApi(transfer);
+    ICrimeApi povideICrimeApi(IFileTransfer transfer,DatabaseReference databaseReference) {
+        return new CrimeApi(transfer,databaseReference);
     }
 
     @Provides
