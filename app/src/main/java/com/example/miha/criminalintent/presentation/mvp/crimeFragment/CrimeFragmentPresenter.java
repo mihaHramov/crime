@@ -28,6 +28,7 @@ public class CrimeFragmentPresenter extends MvpPresenter<CrimeFragmentView> {
             getViewState().showIsSolved(crime.getSolved());
             getViewState().showTitle(crime.getTitle());
             getViewState().showDate(crime.getDate());
+            getViewState().showDetails(crime.getDetails());
         });
         interactor.isChangeableCrime(flag -> getViewState().showIsEnabled(flag));
     }
