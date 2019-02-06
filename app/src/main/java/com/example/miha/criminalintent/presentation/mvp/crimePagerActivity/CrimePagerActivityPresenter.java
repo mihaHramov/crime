@@ -23,8 +23,8 @@ public class CrimePagerActivityPresenter extends MvpPresenter<CrimePagerActivity
 
     public void sentCrime(Crime crime) {
         interactor.sendCrime(crime,
-                string -> getViewState().showResultOfSendCrime(string),
-                string -> getViewState().showResultOfSendCrime(string)
+                crime1 -> getViewState().showResultOfSendCrime(crime.getTitle()),
+                throwable -> getViewState().showResultOfSendCrime(throwable.getMessage())
         );
     }
 }

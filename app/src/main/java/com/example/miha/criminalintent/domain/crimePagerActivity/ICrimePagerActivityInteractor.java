@@ -9,11 +9,11 @@ public interface ICrimePagerActivityInteractor {
     void sendCrime(Crime crime,OnSendComplete sendComplete,OnSendFailure failure);
 
     interface OnSendComplete {
-        void call(String string);
+        void call(Crime crime);
     }
 
     interface OnSendFailure {
-        void call(String string);
+        void call(Throwable error);
     }
 
     void getCrimes(Callback callback);
