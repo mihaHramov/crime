@@ -94,7 +94,7 @@ public class CrimeFragment extends MvpAppCompatFragment implements CrimeFragment
     @Override
     public void showPhoto(String photo) {
         Picasso.get().load(photo)
-                .placeholder(R.drawable.ic_action_account_circle)
+                .resizeDimen(R.dimen.preview_image_size, R.dimen.preview_image_size)
                 .error(R.drawable.ic_action_account_circle)
                 .into(mPhotoView);
         mPhotoView.setOnClickListener(v -> presenter.clickOnImage());
@@ -234,8 +234,8 @@ public class CrimeFragment extends MvpAppCompatFragment implements CrimeFragment
 
     @Override
     public void choiceSuspect() {
-        Intent i = new Intent(getActivity(),UserListActivity.class);
-        startActivityForResult(i,REQUEST_SUSPECT);
+        Intent i = new Intent(getActivity(), UserListActivity.class);
+        startActivityForResult(i, REQUEST_SUSPECT);
     }
 
     @Override
@@ -295,7 +295,7 @@ public class CrimeFragment extends MvpAppCompatFragment implements CrimeFragment
             String date = data.getStringExtra(DatePickerFragment.EXTRA_DATE);
             presenter.changeData(date);
         }
-        if(requestCode == REQUEST_SUSPECT){
+        if (requestCode == REQUEST_SUSPECT) {
             User user = (User) data.getSerializableExtra(UserListFragment.SUSPECT_USER);
             presenter.setSuspectUser(user);
         }
