@@ -6,27 +6,28 @@ import android.support.annotation.Nullable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
 
 import com.arellomobile.mvp.MvpAppCompatDialogFragment;
 import com.example.miha.criminalintent.R;
+import com.github.chrisbanes.photoview.PhotoView;
 import com.squareup.picasso.Picasso;
 
 public class ImageFragment extends MvpAppCompatDialogFragment {
-    public static final String EXTRA_IMAGE_PATH = "com.bignerdranch.android.criminalintent.image_path";
+    private static final String EXTRA_IMAGE_PATH = ImageFragment.class.getName();
 
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        ImageView mImageView = (ImageView) inflater.inflate(R.layout.dialog_image, container, false);
+        View v = inflater.inflate(R.layout.dialog_image, container, false);
         if (getArguments() != null) {
+            PhotoView mImageView = v.findViewById(R.id.image);
             String path = (String) getArguments().getSerializable(EXTRA_IMAGE_PATH);
             Picasso.get()
                     .load(path)
-                    .error(R.drawable.ic_action_account_circle)
+                    .resizeDimen(R.dimen.image_size,R.dimen.image_size)
                     .into(mImageView);
         }
-        return mImageView;
+        return v;
     }
 
 
