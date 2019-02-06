@@ -34,6 +34,11 @@ public class CrimeApi implements ICrimeApi {
 
     @Override
     public Observable<Crime> shareCrime(Crime crime) {
+        return sendImageFromCrime(crime)
+                .flatMap(this::putCrime);
+    }
+
+    private Observable<Crime> sendImageFromCrime(Crime crime) {
         return Observable.just(crime)
                 .flatMap(
                         (Func1<Crime, Observable<String>>) crime12 ->
@@ -41,9 +46,7 @@ public class CrimeApi implements ICrimeApi {
                         (crime1, s) -> {
                             crime1.setPhoto(s);
                             return crime1;
-                        })
-              //  .flatMap(this::putCrime)
-        ;
+                        });
     }
 
     private Observable<Crime> putCrime(Crime crime) {
@@ -54,7 +57,6 @@ public class CrimeApi implements ICrimeApi {
         CrimeOnServer crimeOnServer = new CrimeMaper().call(crime);
         databaseReference
                 .child(TABLE)
-                .child(crime.getAuthor().getServerId())
                 .push()
                 .setValue(crimeOnServer,
                         (databaseError, databaseReference) -> {
