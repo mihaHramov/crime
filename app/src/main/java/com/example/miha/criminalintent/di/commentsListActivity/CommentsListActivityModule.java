@@ -1,10 +1,10 @@
 package com.example.miha.criminalintent.di.commentsListActivity;
 
-import com.arellomobile.mvp.presenter.ProvidePresenter;
 import com.example.miha.criminalintent.domain.model.Crime;
 import com.example.miha.criminalintent.presentation.mvp.commentsListActivity.CommentListActivityPresenter;
 
 import dagger.Module;
+import dagger.Provides;
 
 @Module
 public class CommentsListActivityModule {
@@ -14,7 +14,7 @@ public class CommentsListActivityModule {
         this.crime = crime;
     }
 
-    @ProvidePresenter
+    @Provides
     CommentListActivityPresenter providePresenter() {
         return new CommentListActivityPresenter(crime);
     }
