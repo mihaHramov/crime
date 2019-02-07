@@ -6,6 +6,8 @@ import com.example.miha.criminalintent.di.application.DaggerApplicationComponent
 import com.example.miha.criminalintent.di.auth.AuthComponent;
 import com.example.miha.criminalintent.di.commentListFragment.CommentListFragmentComponent;
 import com.example.miha.criminalintent.di.commentListFragment.CommentsListFragmentModule;
+import com.example.miha.criminalintent.di.commentsListActivity.CommentsListActivityComponent;
+import com.example.miha.criminalintent.di.commentsListActivity.CommentsListActivityModule;
 import com.example.miha.criminalintent.di.crimeFragment.CrimeFragmentComponent;
 import com.example.miha.criminalintent.di.crimeFragment.CrimeFragmentModule;
 import com.example.miha.criminalintent.di.crimeListActivity.CrimeListActivityComponent;
@@ -36,10 +38,6 @@ public class ApplicationCrime extends android.app.Application {
                 .build();
     }
 
-    public static ApplicationComponent getApplicationComponent() {
-        return component;
-    }
-
     public static CrimeListFragmentComponnent getCrimeListFragmentComponent() {
         return component.getCrimeListFragmentComponnent();
     }
@@ -56,11 +54,15 @@ public class ApplicationCrime extends android.app.Application {
         return component.getPagerActivityComponent(new CrimePagerActivityModule(crime));
     }
 
-    public static UserListActivityComponent getUserListActivityComponent(){
+    public static UserListActivityComponent getUserListActivityComponent() {
         return component.getUserListComponent();
     }
 
-    public static CommentListFragmentComponent getCommentsComponent(Crime crime){
+    public static CommentListFragmentComponent getCommentsComponent(Crime crime) {
         return component.getCommentsComponent(new CommentsListFragmentModule(crime));
+    }
+
+    public static CommentsListActivityComponent getCommentsListActivityComponent(Crime crime) {
+        return component.getCommentsActivityComponent(new CommentsListActivityModule(crime));
     }
 }
