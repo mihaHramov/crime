@@ -33,6 +33,7 @@ import com.example.miha.criminalintent.domain.model.User;
 import com.example.miha.criminalintent.presentation.mvp.crimeFragment.CrimeFragmentPresenter;
 import com.example.miha.criminalintent.presentation.mvp.crimeFragment.CrimeFragmentView;
 import com.example.miha.criminalintent.presentation.ui.ApplicationCrime;
+import com.example.miha.criminalintent.presentation.ui.activity.CommentActivity;
 import com.example.miha.criminalintent.presentation.ui.activity.UserListActivity;
 import com.example.miha.criminalintent.presentation.ui.dialog.DatePickerFragment;
 import com.example.miha.criminalintent.presentation.ui.dialog.ImageFragment;
@@ -56,14 +57,17 @@ public class CrimeFragment extends MvpAppCompatFragment implements CrimeFragment
     private static final int REQUEST_SUSPECT = 3;
     private static final String DIALOG_IMAGE = "image";
     private PackageManager pm;
+    private File mPhotoFile;
 
     @BindView(R.id.crime_title)
     EditText mTitleField;
+
     @BindView(R.id.crime_date)
     Button mDateButton;
 
     @BindView(R.id.details)
     EditText mDetails;
+
     @BindView(R.id.crime_solved)
     CheckBox mSolvedCheckBox;
 
@@ -76,9 +80,11 @@ public class CrimeFragment extends MvpAppCompatFragment implements CrimeFragment
     @BindView(R.id.crime_imageView)
     ImageView mPhotoView;
 
-
     @BindView(R.id.crime_reportButton)
-    Button reportButton;
+    Button mReportButton;
+
+    @BindView(R.id.show_comment)
+    Button mShowCommentButton;
 
     @InjectPresenter
     CrimeFragmentPresenter presenter;
@@ -89,6 +95,11 @@ public class CrimeFragment extends MvpAppCompatFragment implements CrimeFragment
         presenter = ApplicationCrime.getCrimeFragmentComponent(crime).getPresenter();
         presenter.init();
         return presenter;
+    }
+
+    @Override
+    public void showComment(Crime crime) {
+        CommentActivity.startActivity(crime, getActivity());
     }
 
     @Override
@@ -152,7 +163,10 @@ public class CrimeFragment extends MvpAppCompatFragment implements CrimeFragment
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         BusProvider.getInstance().register(this);
-        fm = getActivity().getSupportFragmentManager();
+        if (getActivity() != null) {
+            fm = getActivity().getSupportFragmentManager();
+            pm = getActivity().getPackageManager();
+        }
     }
 
     @Override
@@ -211,24 +225,19 @@ public class CrimeFragment extends MvpAppCompatFragment implements CrimeFragment
     }
 
     @Override
-    public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup parent,
-                             Bundle savedInstanceState) {
+    public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup parent, Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.fragment_crime, parent, false);
         ButterKnife.bind(this, v);
-        mDateButton.setOnClickListener(v15 -> presenter.clickChangeDate());
-        pm = getActivity().getPackageManager();
 
-        mPhotoButton.setOnClickListener(v1 -> presenter.takePicture());
+        mDateButton.setOnClickListener(view -> presenter.clickChangeDate());
+        mPhotoButton.setOnClickListener(view -> presenter.takePicture());
+        mReportButton.setOnClickListener(view -> presenter.sendCrime());
+        mSuspectButton.setOnClickListener(view -> presenter.setSuspectCrime());
+        mShowCommentButton.setOnClickListener(view->presenter.showComment());
 
         if (!pm.hasSystemFeature(PackageManager.FEATURE_CAMERA) && !pm.hasSystemFeature(PackageManager.FEATURE_CAMERA_FRONT)) {
             mPhotoButton.setEnabled(false);
         }
-
-
-        reportButton.setOnClickListener(v13 -> presenter.sendCrime());
-
-
-        mSuspectButton.setOnClickListener(v14 -> presenter.setSuspectCrime());
         return v;
     }
 
@@ -242,7 +251,6 @@ public class CrimeFragment extends MvpAppCompatFragment implements CrimeFragment
     public void takePicture() {
         Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
         if (takePictureIntent.resolveActivity(pm) != null) {
-            File mPhotoFile = null;
             try {
                 mPhotoFile = createImageFile();
             } catch (IOException ex) {
@@ -250,7 +258,6 @@ public class CrimeFragment extends MvpAppCompatFragment implements CrimeFragment
             }
             if (mPhotoFile != null) {
                 takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, Uri.fromFile(mPhotoFile));
-                presenter.createPhoto(mPhotoFile.getAbsolutePath());
                 startActivityForResult(takePictureIntent, REQUEST_PHOTO);
             }
         }
@@ -289,7 +296,7 @@ public class CrimeFragment extends MvpAppCompatFragment implements CrimeFragment
         if (resultCode != Activity.RESULT_OK) return;
         //проверяяем от куда пришел ответ
         if (requestCode == REQUEST_PHOTO) {
-            presenter.changePhoto();
+            presenter.changePhoto(mPhotoFile.getAbsolutePath());
         }
         if (requestCode == REQUEST_DATE) {
             String date = data.getStringExtra(DatePickerFragment.EXTRA_DATE);

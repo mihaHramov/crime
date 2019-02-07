@@ -9,7 +9,6 @@ import com.example.miha.criminalintent.presentation.ui.utils.ImageUrlConverter;
 @InjectViewState
 public class CrimeFragmentPresenter extends MvpPresenter<CrimeFragmentView> {
     private ICrimeFragmentInteractor interactor;
-    private String tempFile;
 
     public CrimeFragmentPresenter(ICrimeFragmentInteractor crime) {
         this.interactor = crime;
@@ -68,18 +67,14 @@ public class CrimeFragmentPresenter extends MvpPresenter<CrimeFragmentView> {
         });
     }
 
-    public void createPhoto(String filename) {
-        tempFile = filename;
-    }
-
     public void takePicture() {
         getViewState().takePicture();
     }
 
-    public void changePhoto() {
+    public void changePhoto(String fileName) {
         interactor.loadCrime(crime -> {
-            crime.setPhoto(tempFile);
-            getViewState().showPhoto(tempFile);
+            crime.setPhoto(ImageUrlConverter.getRealAddressFile(fileName));
+            getViewState().showPhoto(crime.getPhoto());
         });
     }
 
@@ -100,5 +95,9 @@ public class CrimeFragmentPresenter extends MvpPresenter<CrimeFragmentView> {
             crime.setSuspect(user);
             getViewState().showSuspect(user);
         });
+    }
+
+    public void showComment() {
+        interactor.loadCrime(crime -> getViewState().showComment(crime));
     }
 }

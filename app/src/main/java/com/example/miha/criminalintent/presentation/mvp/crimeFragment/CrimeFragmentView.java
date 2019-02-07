@@ -43,4 +43,6 @@ public interface CrimeFragmentView extends MvpView {
     void showTitle(String title);
 
     void showDate(String date);
+
+    void showComment(Crime crime);
 }
