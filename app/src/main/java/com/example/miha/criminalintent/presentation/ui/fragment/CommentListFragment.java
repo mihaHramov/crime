@@ -59,7 +59,7 @@ public class CommentListFragment extends MvpAppCompatFragment implements Comment
         return v;
     }
 
-    public CommentListFragment newInstance(Crime crime) {
+    public static CommentListFragment newInstance(Crime crime) {
         Bundle bundle = new Bundle();
         bundle.putSerializable(KEY, crime);
         CommentListFragment fragment = new CommentListFragment();
