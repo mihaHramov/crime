@@ -1,5 +1,7 @@
 package com.example.miha.criminalintent.di.global;
 
+import com.example.miha.criminalintent.data.network.comments.CommentsApiFirebase;
+import com.example.miha.criminalintent.data.network.comments.ICommentsApi;
 import com.example.miha.criminalintent.data.network.crime.CrimeApi;
 import com.example.miha.criminalintent.data.network.crime.ICrimeApi;
 import com.example.miha.criminalintent.data.network.user.AuthUserApi;
@@ -21,8 +23,8 @@ public class ApiModule {
 
 
     @Provides
-    ICrimeApi povideICrimeApi(IFileTransfer transfer,DatabaseReference databaseReference) {
-        return new CrimeApi(transfer,databaseReference);
+    ICrimeApi povideICrimeApi(IFileTransfer transfer, DatabaseReference databaseReference) {
+        return new CrimeApi(transfer, databaseReference);
     }
 
     @Provides
@@ -33,6 +35,11 @@ public class ApiModule {
     @Provides
     FirebaseAuth provideFirebaseAuth() {
         return FirebaseAuth.getInstance();
+    }
+
+    @Provides
+    ICommentsApi provideCommentsApi(DatabaseReference reference) {
+        return new CommentsApiFirebase(reference);
     }
 
     @Provides
