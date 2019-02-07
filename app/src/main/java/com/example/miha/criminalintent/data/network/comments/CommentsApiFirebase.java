@@ -23,9 +23,8 @@ public class CommentsApiFirebase implements ICommentsApi {
 
     @Override
     public Observable<List<CommentOnServer>> getComments(String key) {
-        return Observable.unsafeCreate(subscriber -> databaseReference
-                .child(TABLE)
-                .child(key)
+        return Observable.create(subscriber ->
+                databaseReference.child(TABLE).child(key)
                 .addValueEventListener(
                         new ValueEventListener() {
                             @Override
@@ -38,14 +37,14 @@ public class CommentsApiFirebase implements ICommentsApi {
                                     }
                                 }
                                 subscriber.onNext(commentOnServers);
+                                subscriber.onCompleted();
                             }
 
                             @Override
                             public void onCancelled(@NonNull DatabaseError databaseError) {
                                 subscriber.onError(new Throwable(databaseError.getMessage()));
                             }
-                        })
-        );
+                        }));
 
     }
 }
