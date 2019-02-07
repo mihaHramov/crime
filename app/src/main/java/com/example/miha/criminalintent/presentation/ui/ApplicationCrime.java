@@ -4,6 +4,8 @@ import com.example.miha.criminalintent.di.application.ApplicationComponent;
 import com.example.miha.criminalintent.di.application.ContextModule;
 import com.example.miha.criminalintent.di.application.DaggerApplicationComponent;
 import com.example.miha.criminalintent.di.auth.AuthComponent;
+import com.example.miha.criminalintent.di.commentListFragment.CommentListFragmentComponent;
+import com.example.miha.criminalintent.di.commentListFragment.CommentsListFragmentModule;
 import com.example.miha.criminalintent.di.crimeFragment.CrimeFragmentComponent;
 import com.example.miha.criminalintent.di.crimeFragment.CrimeFragmentModule;
 import com.example.miha.criminalintent.di.crimeListActivity.CrimeListActivityComponent;
@@ -56,5 +58,9 @@ public class ApplicationCrime extends android.app.Application {
 
     public static UserListActivityComponent getUserListActivityComponent(){
         return component.getUserListComponent();
+    }
+
+    public static CommentListFragmentComponent getCommentsComponent(Crime crime){
+        return component.getCommentsComponent(new CommentsListFragmentModule(crime));
     }
 }
