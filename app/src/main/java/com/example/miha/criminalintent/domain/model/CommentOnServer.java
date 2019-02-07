@@ -13,6 +13,7 @@ public class CommentOnServer {
     public String authorName;
     public String date;
     public String message;
+    public String crimeId;
 
     public CommentOnServer() {
     }
@@ -21,6 +22,7 @@ public class CommentOnServer {
     public Map<String, Object> toMap() {
         HashMap<String, Object> result = new HashMap<>();
         result.put("authorPhoto", authorPhoto);
+        result.put("crimeId", crimeId);
         result.put("authorId", authorId);
         result.put("authorName", authorName);
         result.put("date", date);
