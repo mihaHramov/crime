@@ -7,4 +7,8 @@ import java.util.List;
 
 public interface CommentsListFragmentView extends MvpView {
     void showComments(List<Comment> comments);
+
+    void showLoading(Boolean flag);
+
+    void showError(String message);
 }
