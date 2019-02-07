@@ -8,4 +8,5 @@ import rx.Observable;
 
 public interface ICommentsApi {
     Observable<List<CommentOnServer>> getComments(String key);
+    Observable<Boolean> sendComment(CommentOnServer commentOnServer);
 }
