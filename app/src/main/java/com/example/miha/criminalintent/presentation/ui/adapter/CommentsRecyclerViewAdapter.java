@@ -50,6 +50,8 @@ public class CommentsRecyclerViewAdapter extends RecyclerView.Adapter<CommentsRe
         TextView date;
         @BindView(R.id.image)
         ImageView image;
+        @BindView(R.id.name)
+        TextView name;
 
         ViewHolder(@NonNull View itemView) {
             super(itemView);
@@ -59,6 +61,7 @@ public class CommentsRecyclerViewAdapter extends RecyclerView.Adapter<CommentsRe
         public void bind(Comment comment) {
             message.setText(comment.getMessage());
             date.setText(comment.getDate());
+            name.setText(comment.getAuthor().getName());
             Picasso.get()
                     .load(comment.getAuthor().getPhoto())
                     .error(R.drawable.ic_action_account_circle)

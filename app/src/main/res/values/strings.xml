@@ -35,4 +35,8 @@
     <string name="crime_details_hint">Enter details of the crime</string>
     <string name="title_activity_user_list">UserListActivity</string>
     <string name="show_comment">show_comment</string>
+    <string name="time_of_comments">time of comments</string>
+    <string name="author_name">author name</string>
+    <string name="message">message of comment</string>
+    <string name="author_image">author image</string>
 </resources>
