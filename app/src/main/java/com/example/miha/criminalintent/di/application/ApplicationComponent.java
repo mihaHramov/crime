@@ -1,6 +1,8 @@
 package com.example.miha.criminalintent.di.application;
 
 import com.example.miha.criminalintent.di.auth.AuthComponent;
+import com.example.miha.criminalintent.di.commentListFragment.CommentListFragmentComponent;
+import com.example.miha.criminalintent.di.commentListFragment.CommentsListFragmentModule;
 import com.example.miha.criminalintent.di.crimeFragment.CrimeFragmentComponent;
 import com.example.miha.criminalintent.di.crimeFragment.CrimeFragmentModule;
 import com.example.miha.criminalintent.di.crimeListActivity.CrimeListActivityComponent;
@@ -35,4 +37,6 @@ public interface ApplicationComponent {
     DatePickerComponent getDatePickerComponent(DatePickerModule module);
 
     UserListActivityComponent getUserListComponent();
+
+    CommentListFragmentComponent getCommentsComponent(CommentsListFragmentModule module);
 }
