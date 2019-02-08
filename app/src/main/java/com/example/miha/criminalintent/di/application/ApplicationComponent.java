@@ -3,6 +3,8 @@ package com.example.miha.criminalintent.di.application;
 import com.example.miha.criminalintent.di.auth.AuthComponent;
 import com.example.miha.criminalintent.di.commentListFragment.CommentListFragmentComponent;
 import com.example.miha.criminalintent.di.commentListFragment.CommentsListFragmentModule;
+import com.example.miha.criminalintent.di.commentsCreateFragment.CommentsCreateFragmentComponent;
+import com.example.miha.criminalintent.di.commentsCreateFragment.CommentsCreateFragmentModule;
 import com.example.miha.criminalintent.di.commentsListActivity.CommentsListActivityComponent;
 import com.example.miha.criminalintent.di.commentsListActivity.CommentsListActivityModule;
 import com.example.miha.criminalintent.di.crimeFragment.CrimeFragmentComponent;
@@ -41,5 +43,8 @@ public interface ApplicationComponent {
     UserListActivityComponent getUserListComponent();
 
     CommentListFragmentComponent getCommentsComponent(CommentsListFragmentModule module);
+
     CommentsListActivityComponent getCommentsActivityComponent(CommentsListActivityModule module);
+
+    CommentsCreateFragmentComponent getComponentCommentsCreateFragment(CommentsCreateFragmentModule module);
 }
