@@ -1,6 +1,6 @@
 package com.example.miha.criminalintent.domain.commentsCreateFragment;
 
-interface ICommentsCreateInteractor {
+public interface ICommentsCreateInteractor {
     void sendMessage(String message, String date, OnSuccess success, OnError error);
 
     interface OnSuccess {
