@@ -8,5 +8,5 @@ public interface CommentsListActivityView extends MvpView {
 
     void showError(String message);
 
-    void showFormComments();
+    void showFormComments(Crime crime);
 }

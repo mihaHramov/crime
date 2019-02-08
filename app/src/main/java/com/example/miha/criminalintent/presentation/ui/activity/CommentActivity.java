@@ -15,6 +15,7 @@ import com.example.miha.criminalintent.domain.model.Crime;
 import com.example.miha.criminalintent.presentation.mvp.commentsListActivity.CommentListActivityPresenter;
 import com.example.miha.criminalintent.presentation.mvp.commentsListActivity.CommentsListActivityView;
 import com.example.miha.criminalintent.presentation.ui.ApplicationCrime;
+import com.example.miha.criminalintent.presentation.ui.dialog.CommentsCreateFragment;
 import com.example.miha.criminalintent.presentation.ui.fragment.CommentListFragment;
 
 import butterknife.BindView;
@@ -64,8 +65,8 @@ public class CommentActivity extends MvpAppCompatActivity implements CommentsLis
     }
 
     @Override
-    public void showFormComments() {
-
+    public void showFormComments(Crime crime) {
+        CommentsCreateFragment.newInstance(crime).show(getSupportFragmentManager(), "");
     }
 
     public static void startActivity(Crime crime, Context context) {
