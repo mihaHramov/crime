@@ -19,8 +19,8 @@ public class CommentsListActivityModule {
     }
 
     @Provides
-    CommentListActivityPresenter providePresenter() {
-        return new CommentListActivityPresenter(crime);
+    CommentListActivityPresenter providePresenter(ICommentsListActivityInteractor interactor) {
+        return new CommentListActivityPresenter(interactor);
     }
 
     @Provides
