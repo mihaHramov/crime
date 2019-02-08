@@ -12,6 +12,10 @@ public class CommentsCreateFragmentPresenter extends MvpPresenter<CommentsCreate
         this.interactor = interactor;
     }
 
+    public void init() {
+        interactor.getUser(user -> getViewState().showUserInfo(user));
+    }
+
     public void sendComment(String message, String date) {
         getViewState().setEnabled(true);
         interactor.sendMessage(message, date, () -> {
