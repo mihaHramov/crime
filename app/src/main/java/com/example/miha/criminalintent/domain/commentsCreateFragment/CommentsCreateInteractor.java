@@ -47,4 +47,12 @@ public class CommentsCreateInteractor implements ICommentsCreateInteractor {
                 .observeOn(schedulers.ui())
                 .subscribe(aBoolean -> success.success(), error::error);
     }
+
+    @Override
+    public void getUser(OnCompleteLoadUser loadUser) {
+        repositoryOfUser.getCurrentUser()
+                .subscribeOn(schedulers.newThread())
+                .observeOn(schedulers.ui())
+                .subscribe(loadUser::success);
+    }
 }

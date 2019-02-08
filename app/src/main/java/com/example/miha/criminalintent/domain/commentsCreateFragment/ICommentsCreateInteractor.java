@@ -1,6 +1,13 @@
 package com.example.miha.criminalintent.domain.commentsCreateFragment;
 
+import com.example.miha.criminalintent.domain.model.User;
+
 public interface ICommentsCreateInteractor {
+    void getUser(OnCompleteLoadUser loadUser);
+
+    interface OnCompleteLoadUser{
+        void success(User user);
+    }
     void sendMessage(String message, String date, OnSuccess success, OnError error);
 
     interface OnSuccess {
