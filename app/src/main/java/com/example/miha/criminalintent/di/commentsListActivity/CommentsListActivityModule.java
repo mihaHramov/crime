@@ -1,7 +1,11 @@
 package com.example.miha.criminalintent.di.commentsListActivity;
 
+import com.example.miha.criminalintent.data.repositories.repositoryOfUser.IRepositoryOfUser;
+import com.example.miha.criminalintent.domain.commentsListActivity.CommentsListActivityInteractor;
+import com.example.miha.criminalintent.domain.commentsListActivity.ICommentsListActivityInteractor;
 import com.example.miha.criminalintent.domain.model.Crime;
 import com.example.miha.criminalintent.presentation.mvp.commentsListActivity.CommentListActivityPresenter;
+import com.example.miha.criminalintent.presentation.ui.utils.ISchedulersProvider;
 
 import dagger.Module;
 import dagger.Provides;
@@ -17,5 +21,10 @@ public class CommentsListActivityModule {
     @Provides
     CommentListActivityPresenter providePresenter() {
         return new CommentListActivityPresenter(crime);
+    }
+
+    @Provides
+    ICommentsListActivityInteractor provideInteractor(IRepositoryOfUser repositoryOfUser, ISchedulersProvider provider) {
+        return new CommentsListActivityInteractor(crime, repositoryOfUser, provider);
     }
 }
