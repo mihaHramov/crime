@@ -3,9 +3,9 @@ package com.example.miha.criminalintent.presentation.ui.activity;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.design.widget.Snackbar;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
+import android.widget.Toast;
 
 import com.arellomobile.mvp.MvpAppCompatActivity;
 import com.arellomobile.mvp.presenter.InjectPresenter;
@@ -39,8 +39,7 @@ public class CommentActivity extends MvpAppCompatActivity implements CommentsLis
 
     @OnClick(R.id.fab)
     void clickOnAddComments(View view) {
-        Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                .setAction("Action", null).show();
+        presenter.createComments();
     }
 
     @Override
@@ -57,6 +56,16 @@ public class CommentActivity extends MvpAppCompatActivity implements CommentsLis
                 .beginTransaction()
                 .replace(R.id.container, CommentListFragment.newInstance(crime))
                 .commit();
+    }
+
+    @Override
+    public void showError(String message) {
+        Toast.makeText(this, message, Toast.LENGTH_LONG).show();
+    }
+
+    @Override
+    public void showFormComments() {
+
     }
 
     public static void startActivity(Crime crime, Context context) {
