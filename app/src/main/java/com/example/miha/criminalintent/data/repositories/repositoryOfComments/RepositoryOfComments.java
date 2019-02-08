@@ -26,4 +26,9 @@ public class RepositoryOfComments implements IRepositoryOfComments {
                 .map(new CommentsMapper())
                 .toList();
     }
+
+    @Override
+    public Observable<Boolean> addComment(CommentOnServer crime) {
+        return commentsApi.sendComment(crime);
+    }
 }
