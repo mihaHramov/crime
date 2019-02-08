@@ -39,4 +39,5 @@
     <string name="author_name">author name</string>
     <string name="message">message of comment</string>
     <string name="author_image">author image</string>
+    <string name="send_comment">send comment</string>
 </resources>
