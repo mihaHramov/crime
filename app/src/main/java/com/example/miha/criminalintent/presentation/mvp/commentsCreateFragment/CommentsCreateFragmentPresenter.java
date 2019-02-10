@@ -13,7 +13,12 @@ public class CommentsCreateFragmentPresenter extends MvpPresenter<CommentsCreate
     }
 
     public void init() {
-        interactor.getUser(user -> getViewState().showUserInfo(user));
+        interactor.getUser(user -> {
+            if (!user.getPhoto().isEmpty()) {
+                getViewState().showUserPhoto(user.getPhoto());
+            }
+            getViewState().showUserName(user.getName());
+        });
     }
 
     public void sendComment(String message, String date) {

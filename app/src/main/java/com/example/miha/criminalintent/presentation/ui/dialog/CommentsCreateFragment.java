@@ -17,7 +17,6 @@ import com.arellomobile.mvp.presenter.InjectPresenter;
 import com.arellomobile.mvp.presenter.ProvidePresenter;
 import com.example.miha.criminalintent.R;
 import com.example.miha.criminalintent.domain.model.Crime;
-import com.example.miha.criminalintent.domain.model.User;
 import com.example.miha.criminalintent.presentation.mvp.commentsCreateFragment.CommentsCreateFragmentPresenter;
 import com.example.miha.criminalintent.presentation.mvp.commentsCreateFragment.CommentsCreateFragmentView;
 import com.example.miha.criminalintent.presentation.ui.ApplicationCrime;
@@ -81,9 +80,13 @@ public class CommentsCreateFragment extends MvpAppCompatDialogFragment implement
     }
 
     @Override
-    public void showUserInfo(User user) {
-        Picasso.get().load(user.getPhoto()).into(image);
-        name.setText(user.getName());
+    public void showUserPhoto(String photo) {
+        Picasso.get().load(photo).into(image);
+    }
+
+    @Override
+    public void showUserName(String nameOfUser) {
+        name.setText(nameOfUser);
     }
 
     public static CommentsCreateFragment newInstance(Crime crime) {
