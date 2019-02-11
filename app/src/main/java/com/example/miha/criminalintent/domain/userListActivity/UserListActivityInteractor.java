@@ -18,7 +18,6 @@ public class UserListActivityInteractor implements IUserListActivityInteractor {
         repositoryOfUser.getUsers()
                 .subscribeOn(provider.newThread())
                 .observeOn(provider.ui())
-                .doOnError(throwable -> onLoadingListener.onError(throwable.getMessage()))
-                .subscribe(onLoadingListener::success);
+                .subscribe(onLoadingListener::success,throwable -> onLoadingListener.onError(throwable.getMessage()));
     }
 }
