@@ -81,7 +81,11 @@ public class CommentsCreateFragment extends MvpAppCompatDialogFragment implement
 
     @Override
     public void showUserPhoto(String photo) {
-        Picasso.get().load(photo).into(image);
+        Picasso.get()
+                .load(photo)
+                .placeholder(R.drawable.ic_action_account_circle)
+                .error(R.drawable.ic_action_account_circle)
+                .into(image);
     }
 
     @Override
