@@ -32,13 +32,9 @@ public class UserStorage implements UserStorageApi {
 
     private void putUser(SingleSubscriber<? super User> singleSubscriber, User user) {
         UserOnServer userOnServer = new UserOnServer(user.getName(), user.getPhoto());
-        databaseReference.child(TABLE).child(user.getServerId()).push().setValue(userOnServer, (databaseError, databaseReference) -> {
-            if (databaseError != null) {
-                singleSubscriber.onError(getError("miha"+databaseError.getMessage()));
-            } else {
-                singleSubscriber.onSuccess(user);
-            }
-        });
+        databaseReference.child(TABLE).child(user.getServerId()).setValue(userOnServer)
+                .addOnCompleteListener(task -> singleSubscriber.onSuccess(user))
+                .addOnFailureListener(e -> singleSubscriber.onError(getError(e.getMessage())));
     }
 
     private Throwable getError(String ex) {
