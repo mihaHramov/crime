@@ -60,7 +60,8 @@ public class RepositoryOfUser implements IRepositoryOfUser {
         return api.getAllUser()
                 .flatMap((Func1<List<User>, Observable<User>>) Observable::from)
                 .flatMap((Func1<User, Observable<User>>) this::addUserIfNotExist)
-                .toList();
+                .toList()
+                .onErrorReturn(throwable -> localDb.getUsers());
     }
 
     @Override
