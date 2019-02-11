@@ -10,6 +10,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ProgressBar;
+import android.widget.Toast;
 
 import com.arellomobile.mvp.MvpAppCompatFragment;
 import com.arellomobile.mvp.presenter.InjectPresenter;
@@ -69,7 +70,7 @@ public class UserListFragment extends MvpAppCompatFragment implements UserListAc
 
     @Override
     public void showError(String error) {
-
+        Toast.makeText(getActivity(),error,Toast.LENGTH_LONG).show();
     }
 
     @Override
