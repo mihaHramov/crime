@@ -357,21 +357,43 @@ public class BdRepositoryOfCrime extends SQLiteOpenHelper {
 
     public User create(User user) {
         SQLiteDatabase db = getWritableDatabase();
-        String query = "SELECT * FROM "+USER_TABLE+" WHERE " + USER_URL_ID + " = '" + user.getServerId()+"'";
+        String query = "SELECT * FROM " + USER_TABLE + " WHERE " + USER_URL_ID + " = '" + user.getServerId() + "'";
         Cursor cursor = db.rawQuery(query, null);
-        if(cursor.moveToFirst()){
-           Integer  id = cursor.getColumnIndex(USER_ID);
-           Integer idUser = cursor.getInt(id);
-           user.setId(idUser);
-        }else {
+        if (cursor.moveToFirst()) {
+            Integer id = cursor.getColumnIndex(USER_ID);
+            Integer idUser = cursor.getInt(id);
+            user.setId(idUser);
+        } else {
             ContentValues cv = new ContentValues();
-            cv.put(USER_NAME,user.getName());
-            cv.put(USER_PHOTO,user.getPhoto());
-            cv.put(USER_URL_ID,user.getServerId());
+            cv.put(USER_NAME, user.getName());
+            cv.put(USER_PHOTO, user.getPhoto());
+            cv.put(USER_URL_ID, user.getServerId());
             user.setId((int) db.insert(USER_TABLE, null, cv));
 
         }
         db.close();
         return user;
+    }
+
+    public List<User> getUsers() {
+        List<User> userList = new ArrayList<>();
+        SQLiteDatabase db = this.getWritableDatabase();
+        String selectComments = " SELECT  * FROM " + USER_TABLE;
+        Cursor cursor = db.rawQuery(selectComments, null);
+        if (cursor.moveToFirst()) {
+            Integer nameCol = cursor.getColumnIndex(USER_NAME);
+            Integer photoColl = cursor.getColumnIndex(USER_PHOTO);
+            Integer urlColl = cursor.getColumnIndex(USER_URL_ID);
+            Integer idColl = cursor.getColumnIndex(USER_ID);
+            do {
+                User user = new User();
+                user.setName(cursor.getString(nameCol));
+                user.setPhoto(cursor.getString(photoColl));
+                user.setServerId(cursor.getString(urlColl));
+                user.setId(cursor.getInt(idColl));
+                userList.add(user);
+            } while (cursor.moveToNext());
+        }
+        return userList;
     }
 }
