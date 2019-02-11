@@ -1,5 +1,6 @@
 package com.example.miha.criminalintent.presentation.ui;
 
+import com.crashlytics.android.Crashlytics;
 import com.example.miha.criminalintent.di.application.ApplicationComponent;
 import com.example.miha.criminalintent.di.application.ContextModule;
 import com.example.miha.criminalintent.di.application.DaggerApplicationComponent;
@@ -20,6 +21,7 @@ import com.example.miha.criminalintent.di.datePickerFragment.DatePickerComponent
 import com.example.miha.criminalintent.di.datePickerFragment.DatePickerModule;
 import com.example.miha.criminalintent.di.userListActivity.UserListActivityComponent;
 import com.example.miha.criminalintent.domain.model.Crime;
+import io.fabric.sdk.android.Fabric;
 
 public class ApplicationCrime extends android.app.Application {
     static ApplicationComponent component;
@@ -35,6 +37,7 @@ public class ApplicationCrime extends android.app.Application {
     @Override
     public void onCreate() {
         super.onCreate();
+        Fabric.with(this, new Crashlytics());
         component = DaggerApplicationComponent.builder()
                 .contextModule(new ContextModule(this))
                 .build();
