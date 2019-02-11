@@ -1,5 +1,6 @@
 package com.example.miha.criminalintent.presentation.ui.activity;
 
+import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.view.Menu;
@@ -22,6 +23,8 @@ public class CrimeListActivity extends SingleFragmentActivity
     @InjectPresenter
     CrimeListActivityPresenter presenter;
 
+    private FragmentManager fm;
+
     @ProvidePresenter
     public CrimeListActivityPresenter providePresenter() {
         presenter = ApplicationCrime.getCrimeListActivityComponent().getPresenter();
@@ -40,6 +43,13 @@ public class CrimeListActivity extends SingleFragmentActivity
         return super.onCreateOptionsMenu(menu);
     }
 
+
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        setTheme(R.style.AppTheme_NoActionBar);
+        super.onCreate(savedInstanceState);
+        fm = getSupportFragmentManager();
+    }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
@@ -72,11 +82,10 @@ public class CrimeListActivity extends SingleFragmentActivity
 
     @Override
     public void showCrimeInFragment(Crime uuid) {
-        getSupportFragmentManager().beginTransaction()
+        fm.beginTransaction()
                 .replace(R.id.detailFragmentContainer, CrimeFragment.newInstance(uuid))
                 .commit();
     }
-
 
     @Override
     public void showAuth() {
@@ -85,7 +94,6 @@ public class CrimeListActivity extends SingleFragmentActivity
 
     @Override
     public void updateCrimeList() {
-        FragmentManager fm = getSupportFragmentManager();
         CrimeListFragment listFragment = (CrimeListFragment)
                 fm.findFragmentById(R.id.fragmentContainer);
         if (listFragment != null) {
