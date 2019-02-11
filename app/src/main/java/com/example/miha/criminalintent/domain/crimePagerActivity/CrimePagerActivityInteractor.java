@@ -51,13 +51,11 @@ public class CrimePagerActivityInteractor implements ICrimePagerActivityInteract
     @Override
     public void sendCrime(Crime crime, OnSendComplete complete, OnSendFailure failure) {
         repositoryOfUser.getCurrentUser()
+                .flatMap((Func1<User, Observable<User>>) user -> user.getId() > 0 ? Observable.just(user) : Observable.error(new Throwable("please auth")))
                 .doOnNext(crime::setAuthor)
-                .flatMap((Func1<User, Observable<Crime>>) user -> user.getId() > 0 ? api.shareCrime(crime) : Observable.error(new Throwable("please auth")))
+                .flatMap((Func1<User, Observable<Crime>>) user -> api.shareCrime(crime))
                 .subscribeOn(schedulers.newThread())
                 .observeOn(schedulers.ui())
-                .doOnNext(complete::call)
-                .doOnError(failure::call)
-                .subscribe();
-
+                .subscribe(complete::call, failure::call);
     }
 }
