@@ -25,7 +25,7 @@ public class CommentsCreateInteractor implements ICommentsCreateInteractor {
 
     @Override
     public void sendMessage(String message, String data, OnSuccess success, OnError error) {
-        Observable<Crime> crimeObservable = Observable.just(crime);
+        Observable<Crime> crimeObservable = Observable.just(crime).flatMap((Func1<Crime, Observable<Crime>>) crime -> crime.getPublick() ? Observable.just(crime) : Observable.error(new Throwable("crime not public")));
         Observable<String> dataObservable = Observable.just(data);
         Observable<String> messageObservable = Observable.just(message);
         Observable<User> userObservable = repositoryOfUser.getCurrentUser().flatMap((Func1<User, Observable<User>>) user -> user.getId() > 0 ? Observable.just(user) : Observable.error(new Throwable("please auth")));
